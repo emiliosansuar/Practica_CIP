@@ -66,7 +66,7 @@ architecture arch_AC4 of AC4 is
 
 
 begin
-  -- Instanciacion de componentes  -----------------------------------
+  -- Instanciacion de componentes  ----------------------------
 
   --instanciacion de los 3 displays 7 segments que deben de mostrar los digitos de la memoria de precios
   inst7s0: dec7seg port map (in_abc => digit_0_p, out_7seg => seg_out_0);
