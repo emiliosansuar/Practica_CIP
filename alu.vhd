@@ -1,0 +1,1 @@
+-- 3 registros para operaciones. 2 de valores y 1 de reultados 
