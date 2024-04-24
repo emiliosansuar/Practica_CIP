@@ -3,15 +3,15 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
-entity alu is
+entity cpu is
   port
   (
     --entradas y salidas 
     
   );
-end entity alu;
+end entity cpu;
 
-architecture arch_alu of alu is
+architecture arch_cpu of cpu is
   
     -- SIGNALS --------------------------------------
   
@@ -29,4 +29,3 @@ architecture arch_alu of alu is
     -- PROCESOS --------------------------------------------------
   
   end;
-  
