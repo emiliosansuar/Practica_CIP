@@ -15,7 +15,14 @@ entity cpu is
 end entity cpu;
 
 architecture arch_cpu of cpu is
-  
+  type register_banc is array (0 to 15) of std_logic_vector(15 downto 0); -- 16 direcciones con 16 bits cada una.
+  signal banc_register : register_banc := (
+    others => (others => '0') -- Inicializa todas las direcciones con ceros
+  );  
+
+
+
+
     -- SIGNALS --------------------------------------
   
   
