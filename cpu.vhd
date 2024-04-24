@@ -14,10 +14,16 @@ entity cpu is
     out_cpu_to_mem  : out std_logic_vector (31 downto 0);
     mem_address     : out std_logic_vector (5 downto 0);
     --Bus de escritura
-    waddr           : out std_logic_vector (31 downto 0); --direccion de la data a escribir 
-    wavalid         : out std_logic; --validacion de la direccion de escritura 
+    waddr           : out std_logic_vector (31 downto 0); --dirección de la data a escribir 
+    wavalid         : out std_logic; --validacion de la dirección de escritura 
     wdata           : out std_logic_vector (31 downto 0); --data a escribir 
     wdatav          : out std_logic; --validacin de la data a escribir 
+    
+    raddr           : out std_logic_vector (31 downto 0); --direccion de la data a leer 
+    ravalid         : out std_logic; --validacion de la dirección de lectura
+    rdata           : in std_logic_vector (31 downto 0); --data a leer
+    rdatav          : in std_logic; --validación de la data a leer
+    rresp          : in std_logic_vector (1 downto 0); --respuesta de la leectura 
     clock : in std_logic
     
   );
@@ -40,6 +46,7 @@ architecture arch_cpu of cpu is
     signal decoder_out: std_logic_vector (13 downto 0);
     signal prog_count: std_logic_vector (5 downto 0);
     signal instruct_reg: std_logic_vector (31 downto 0);
+    
   
   
   
