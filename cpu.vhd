@@ -10,6 +10,15 @@ entity cpu is
   port
   (
     --entradas y salidas 
+    in_mem_to_cpu   : in std_logic_vector (31 downto 0);
+    out_cpu_to_mem  : out std_logic_vector (31 downto 0);
+    mem_address     : out std_logic_vector (5 downto 0);
+    --Bus de escritura
+    waddr           : out std_logic_vector (31 downto 0); --direccion de la data a escribir 
+    wavalid         : out std_logic; --validacion de la direccion de escritura 
+    wdata           : out std_logic_vector (31 downto 0); --data a escribir 
+    wdatav          : out std_logic; --validacin de la data a escribir 
+    clock : in std_logic
     
   );
 end entity cpu;
@@ -24,6 +33,13 @@ architecture arch_cpu of cpu is
 
 
     -- SIGNALS --------------------------------------
+    signal oper_1: std_logic_vector (15 downto 0);
+    signal oper_2: std_logic_vector (15 downto 0);
+    signal out_alu: std_logic_vector (15 downto 0);
+    signal decoder_in: std_logic_vector (4 downto 0);
+    signal decoder_out: std_logic_vector (13 downto 0);
+    signal prog_count: std_logic_vector (5 downto 0);
+    signal instruct_reg: std_logic_vector (31 downto 0);
   
   
   
