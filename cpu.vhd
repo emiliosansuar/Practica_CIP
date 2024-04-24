@@ -18,13 +18,16 @@ entity cpu is
     wavalid         : out std_logic; --validacion de la dirección de escritura 
     wdata           : out std_logic_vector (31 downto 0); --data a escribir 
     wdatav          : out std_logic; --validacin de la data a escribir 
-    
+    wresp           : in std_logic_vector (1 downto 0); -- respuesta de la escritura 
+    wrespv          : in std_logic; -- validacion de la respuesta de escritura 
+
+    --Bus de escritura 
     raddr           : out std_logic_vector (31 downto 0); --direccion de la data a leer 
     ravalid         : out std_logic; --validacion de la dirección de lectura
     rdata           : in std_logic_vector (31 downto 0); --data a leer
     rdatav          : in std_logic; --validación de la data a leer
-    rresp          : in std_logic_vector (1 downto 0); --respuesta de la leectura 
-    clock : in std_logic
+    rresp           : in std_logic_vector (1 downto 0); --respuesta de la leectura 
+    clock           : in std_logic
     
   );
 end entity cpu;
