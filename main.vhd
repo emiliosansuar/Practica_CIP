@@ -1,3 +1,5 @@
+--TODO: CPU , Y MEMORIA 
+
 --BLOQUE MEMORIA
 
 library ieee;

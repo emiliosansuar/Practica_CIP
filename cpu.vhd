@@ -1,3 +1,6 @@
+--TO DO: Máquina de estados (unidad de control), ALU, Banco de registro , Decoder
+
+
 -- 3 registros para operaciones. 2 de valores y 1 de reultados 
 library ieee;
 use ieee.std_logic_1164.all;
