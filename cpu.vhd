@@ -38,8 +38,6 @@ architecture arch_cpu of cpu is
     others => (others => '0') -- Inicializa todas las direcciones con ceros
   );  
 
-  signal decoder_in   : std_logic_vector(4 downto 0);
-  signal decoder_out  : std_logic_vector(13 downto 0);
 
 
     -- SIGNALS --------------------------------------
@@ -59,13 +57,6 @@ architecture arch_cpu of cpu is
   
   
   begin
-
-    with KEY(1 downto 0) select
-    decoder_out <=  op_1 when "00",
-                    op_2 when "01", 
-                    op_3 when "10",
-                    op_4 when "11",
-                    "0000000000" when others;
     -- Instanciacion de componentes  ----------------------------
   
     
