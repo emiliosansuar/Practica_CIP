@@ -43,6 +43,14 @@ architecture arch_cpu of cpu is
 
 
     -- SIGNALS --------------------------------------
+    signal oper_1: std_logic_vector (15 downto 0);
+    signal oper_2: std_logic_vector (15 downto 0);
+    signal out_alu: std_logic_vector (15 downto 0);
+    signal decoder_in: std_logic_vector (4 downto 0);
+    signal decoder_out: std_logic_vector (13 downto 0);
+    signal prog_count: std_logic_vector (5 downto 0);
+    signal instruct_reg: std_logic_vector (31 downto 0);
+    
   
   
   
