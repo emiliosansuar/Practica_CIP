@@ -86,7 +86,7 @@ architecture arch_cpu of cpu is
             --Load  -> pasamos oper_1 a out_alu directament
             --Store -> pasamos oper_1 a out_alu directament
       
-      Compare_op <= "0000000000000001" when (oper_1 > oper_2) else
+      Compare_op <= "0000000000000001" when (signed(oper_1) > signed(oper_2)) else
                     "0000000000000000";    --Compare
       
       Shift_left_op <= std_logic_vector(shift_left(unsigned(oper_1), to_integer(unsigned(oper_2))));      --Shift Left   shift_left(oper_1, to_integer(unsigned(oper_2)))
