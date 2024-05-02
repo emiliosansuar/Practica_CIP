@@ -58,6 +58,8 @@ architecture arch_cpu of cpu is
   
   begin
     -- Instanciacion de componentes  ----------------------------
+
+    --  inicio ALU
     process(clk)
       signal Add_op : std_logic_vector (15 downto 0);
       signal Substract_op : std_logic_vector (15 downto 0);
@@ -110,7 +112,7 @@ architecture arch_cpu of cpu is
                   oper_1 		when decoder_out = "00000000000010" else
                   Jump_conditionallly_op when decoder_out = "00000000000001";
     end process;
-    
+    --  fin ALU
   
     -- PROCESOS --------------------------------------------------
   
