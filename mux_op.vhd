@@ -21,6 +21,7 @@ architecture Behavioral of bank_register is
     signal wenable_rd std_logic;
 
 
+    
     begin
     process (rs, rt, rd)
 
