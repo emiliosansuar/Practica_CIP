@@ -54,10 +54,6 @@ architecture arch_cpu of cpu is
   ---DECODER PARA LO DE LAS OPERACIONES:
   --32 BITS  --- LOS TROCEAMOS Y LOS 4 PRIMEROS OPCODE.
   --EN FUNCIÓN DE ESOS 4 SE TE ACTIVA UNO DE LOS 16 BITS .
-
-
-  
-  
   
     -- Componentes -----------------------------------
   

@@ -1,49 +1,46 @@
-entity mux_op is
+entity bank_register is
     Port (
-        Input_A : in std_logic_vector(31 downto 0); -- Entrada A de 32 bits
-        --Input_B : in std_logic_vector(31 downto 0); -- Entrada B de 32 bits
-        Selector : in std_logic_vector(5 downto 0); -- Selector de 6 bits
-        Output : out std_logic -- Salida de 1 bit
+        rd : in std_logic_vector(5 downto 0); 
+        rs : in std_logic_vector(5 downto 0); 
+        rt : in std_logic_vector(5 downto 0);
+        type_oper : in std_logic_vector(1 downto 0);
+        dataOut : out std_logic_vector(15 downto 0); --lo que irá conectado a los dos registros de los opers
+
     );
-end mux_op;
+end bank_register;
 
-architecture Behavioral of mux_op is
-begin
-    begin
-        process (Input_A, Selector)
-        begin
-            Output <= '0';  -- Valor predeterminado
-    
-            for i in 0 to 31 loop
-                if to_integer(unsigned(Selector)) = i then
-                    Output <= Input_A(i);
-                end if;
-            end loop;
-        end process;
-end Behavioral;
-
-entity mux_op is
-    Port (
-        Input_mux : in std_logic_vector(15 downto 0); -- es la salida del banco de registros y al mismo tiempo la entrada de los muxes.
-        Selector : in std_logic_vector(5 downto 0); -- Selector de 6 bits
-        Output : out std_logic -- Salida de 1 bit
-    );
-end mux_op;
-
-architecture Behavioral of mux_op is
+architecture Behavioral of bank_register is
 
     type banc_regi is array (0 to 15) of std_logic_vector(15 downto 0); -- 16 posiciones de 16 bits cada una, es decir tendremos 16 registros con 16 bits cada uno.
     signal data_regi : banc_regi := (
-        others => (others => '0')  -- Inicializa todas las posiciones a 16 bits a '0'
+        others => (others => '0')  -- Inicializamos todas las posiciones a 16 bits a '0'
     );
 
-    signal rs std_logic_vector(5 downto 0);
-    signal rt std_logic_vector(5 downto 0);
-    signal data_op1 std_logic_vector(15 downto 0);
+    signal wenable_rs std_logic;
+    signal wenable_rt std_logic;
+    signal wenable_rd std_logic;
+
 
     begin
-    process (Input_mux, rs)
-    begin
+    process (rs, rt, rd)
+
+        when type_oper == "00" -- RRR
+            dataOut <= banc_regi(rd);
+            wenable_rd <= '1';
+
+        when type_oper == "01" -- RR
+
+            dataOut <= banc_regi(rs); 
+
+        when type_oper == "10" -- R
+            dataOut <= banc_regi(rs); 
+
+        when type_oper == "11" -- RRRimm
+            dataOut <= banc_regi(rs); 
+
+
+
+
 
         case rs is
             when "000000" =>
