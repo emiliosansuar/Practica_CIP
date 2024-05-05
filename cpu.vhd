@@ -44,11 +44,18 @@ architecture arch_cpu of cpu is
     signal oper_1: std_logic_vector (15 downto 0);
     signal oper_2: std_logic_vector (15 downto 0);
     signal out_alu: std_logic_vector (15 downto 0);
-    signal decoder_in: std_logic_vector (4 downto 0);
+    signal decoder_in: std_logic_vector (31 downto 0); --DATO
     signal decoder_out: std_logic_vector (13 downto 0);
     signal prog_count: std_logic_vector (5 downto 0);
     signal instruct_reg: std_logic_vector (31 downto 0);
     
+
+
+  ---DECODER PARA LO DE LAS OPERACIONES:
+  --32 BITS  --- LOS TROCEAMOS Y LOS 4 PRIMEROS OPCODE.
+  --EN FUNCIÓN DE ESOS 4 SE TE ACTIVA UNO DE LOS 16 BITS .
+
+
   
   
   
