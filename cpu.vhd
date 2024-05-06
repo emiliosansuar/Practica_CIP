@@ -41,7 +41,7 @@ architecture arch_cpu of cpu is
 
 
     -- SIGNALS --------------------------------------
-    signal oper_1: std_logic_vector (15 downto 0);
+    signal oper_1: std_logic_vector (15 downto 0); --no pueden ser signals. cambiar a registers 
     signal oper_2: std_logic_vector (15 downto 0);
     signal out_alu: std_logic_vector (15 downto 0);
     signal decoder_in: std_logic_vector (31 downto 0); --DATO

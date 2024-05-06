@@ -1,20 +1,20 @@
---TODO: CPU , Y MEMORIA 
 
---BLOQUE MEMORIA
+
+--Maquina de estados
 
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
-entity Practica_CIP is
+entity control_unit is
   port
   (
     --entradas y salidas 
 
   );
-end entity Practica_CIP;
+end entity control_unit;
 
-architecture arch_Practica_CIP of Practica_CIP is
+architecture arch_control_unit of control_unit is
   
   
   -- SIGNALS --------------------------------------

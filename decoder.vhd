@@ -6,17 +6,15 @@ entity decoder is
         address_rs: out std_logic_vector(5 downto 0);
         address_rt: out std_logic_vector(5 downto 0);
         const_imm: : out std_logic_vector(7 downto 0);
-        --ravalid :  out std_logic;
-        -- mirar foto
     );
 end decoder;
 
-architecture Behavioral of decoder is
+architecture arch_decoder of decoder is
     begin
         process(instruction)
         begin
             opCode <= instruction(31 downto 28);
-            
+            --RECORDAR, seaRRR o RR o R. Oper1 es siempre rs y Oper2 es rt
             case opCode is
                 when "0000" | "0010" | "0011" | "0100" | "0101" | "1001" | "1010" | "1011" | "1101" =>
                     address_rd  <= instruction(23 downto 18);
@@ -45,5 +43,5 @@ architecture Behavioral of decoder is
                     null;
             end case;
         end process;
-    end Behavioral;
+    end arch_decoder;
     
