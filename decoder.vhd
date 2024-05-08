@@ -20,7 +20,7 @@ architecture arch_decoder of decoder is
                     address_rd  <= instruction(23 downto 18);
                     address_rs  <= instruction(11 downto 6);
                     address_rt  <= instruction(5 downto 0);
-                    const_imm <= (others => '0'); -- Por defecto, se establece a cero
+                    --const_imm <= (others => '0'); -- Por defecto, se establece a cero
                     type_oper <= "00"; --RRR
 
                 when "0110" | "0111" | "1000" => 
@@ -43,5 +43,6 @@ architecture arch_decoder of decoder is
                     null;
             end case;
         end process;
-    end arch_decoder;
+    end arch_decod
+    ;
     
