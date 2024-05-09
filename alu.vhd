@@ -7,14 +7,29 @@ entity alu is
   (
     oper_1      : in std_logic_vector (15 downto 0);
     oper_2      : in std_logic_vector (15 downto 0);
-    decoder_out : in std_logic_vector (13 downto 0);
-    clock       : in std_logic
+    decoder_out : in std_logic_vector (3 downto 0);
+    clock       : in std_logic;
 
-    out_alu     : out std_logic_vector (15 downto 0);
+    out_alu     : out std_logic_vector (15 downto 0)
   );
 end entity alu;
 
 architecture arch_alu of alu is
+
+    component register_block is
+        generic(
+        		data_size : integer := 5
+    		); 
+
+   		port(
+        		data_in : in std_logic_vector((data_size - 1) downto 0);
+        		enable  : in std_logic;
+        		clock   : in std_logic;
+
+        		data_out : out std_logic_vector((data_size - 1) downto 0)
+    		);
+
+    end component;
 
     signal Add_op : std_logic_vector (15 downto 0);
     signal Substract_op : std_logic_vector (15 downto 0);
@@ -26,8 +41,22 @@ architecture arch_alu of alu is
     signal Shift_left_op : std_logic_vector (15 downto 0);
     signal Shift_right_op : std_logic_vector (15 downto 0);
     signal Jump_conditionallly_op : std_logic_vector (15 downto 0);
+
+    signal input_register : std_logic_vector (15 downto 0);
     
   begin
+
+    output_register : register_block
+    generic map(
+        data_size => 16
+    )
+	port map(
+		data_in => input_register,
+		enable => '1',
+		clock => clock,
+
+		data_out => out_alu
+	);
 
     Add_op <= std_logic_vector(signed(oper_1) + signed(oper_2));         --Add y Add Immediate
     
@@ -54,20 +83,20 @@ architecture arch_alu of alu is
     Jump_conditionallly_op <= "1111111111111111" when (oper_1 = oper_2) else
                               "1010101010101010";    --Jump/Branch conditionally
 
-    out_alu <=  Add_op 		when decoder_out = "10000000000000" else
-                Add_op 		when decoder_out = "01000000000000" else
-                Substract_op 		when decoder_out = "00100000000000" else
-                Or_op 		when decoder_out = "00010000000000" else
-                Xor_op 		when decoder_out = "00001000000000" else
-                And_op 		when decoder_out = "00000100000000" else
-                Not_op 		when decoder_out = "00000010000000" else
-                oper_1 		when decoder_out = "00000001000000" else
-                oper_1 		when decoder_out = "00000000100000" else
-                Compare_op 		when decoder_out = "00000000010000" else
-                Shift_left_op 	when decoder_out = "00000000001000" else
-                Shift_right_op 	when decoder_out = "00000000000100" else
-                oper_1 		when decoder_out = "00000000000010" else
-                Jump_conditionallly_op when decoder_out = "00000000000001";
+    input_register <=   Add_op 		    when decoder_out = "0000" else
+                        Add_op 		    when decoder_out = "0001" else
+                        Substract_op    when decoder_out = "0010" else
+                        Or_op 		    when decoder_out = "0011" else
+                        Xor_op 		    when decoder_out = "0100" else
+                        And_op 		    when decoder_out = "0101" else
+                        Not_op 		    when decoder_out = "0110" else
+                        oper_1 		    when decoder_out = "0111" else
+                        oper_1 		    when decoder_out = "1000" else
+                        Compare_op 	    when decoder_out = "1001" else
+                        Shift_left_op 	when decoder_out = "1010" else
+                        Shift_right_op 	when decoder_out = "1011" else
+                        oper_1 		    when decoder_out = "1100" else
+                        Jump_conditionallly_op when decoder_out = "1101";
 
 
   end;
