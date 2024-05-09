@@ -6,6 +6,8 @@ use ieee.numeric_std.all;
 entity memoria is
   port
   (
+    clock : in std_logic     --validación de la lectura
+
     --entradas i salidas para escritura
     WADDR : in std_logic_vector(5 downto 0);   --dirección donde escrivir
     WDATA : in std_logic_vector(31 downto 0);   --dato a escrivir
@@ -49,7 +51,7 @@ begin
                   '0';
   
   --write process
-  process(valid_write_ok, data_write_ok)
+  process(clock)
   begin 
     if(valid_write_ok = '1') then
 
@@ -73,7 +75,7 @@ begin
   end process;
 
   --read process
-  process(data_read_ok, RAVALID)
+  process(clock)
   begin
     if(RAVALID = '1') then
 
