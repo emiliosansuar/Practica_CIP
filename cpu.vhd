@@ -33,69 +33,116 @@ entity cpu is
 end entity cpu;
 
 architecture arch_cpu of cpu is
+  type register_banc is array (0 to 15) of std_logic_vector(15 downto 0); -- 16 direcciones con 16 bits cada una.
+  signal banc_register : register_banc := (
+    others => (others => '0') -- Inicializa todas las direcciones con ceros
+  );  
+
+
 
     -- SIGNALS --------------------------------------
-    signal oper_1: std_logic_vector (15 downto 0);
+    signal oper_1: std_logic_vector (15 downto 0); --no pueden ser signals. cambiar a registers 
     signal oper_2: std_logic_vector (15 downto 0);
     signal out_alu: std_logic_vector (15 downto 0);
-    signal decoder_in: std_logic_vector (4 downto 0);
+    signal decoder_in: std_logic_vector (31 downto 0); --DATO
     signal decoder_out: std_logic_vector (13 downto 0);
     signal prog_count: std_logic_vector (5 downto 0);
     signal instruct_reg: std_logic_vector (31 downto 0);
-
-    signal Add_op : std_logic_vector (15 downto 0);
-    signal Substract_op : std_logic_vector (15 downto 0);
-    signal Or_op : std_logic_vector (15 downto 0);
-    signal Xor_op : std_logic_vector (15 downto 0);
-    signal And_op : std_logic_vector (15 downto 0);
-    signal Not_op : std_logic_vector (15 downto 0);
-    signal Compare_op : std_logic_vector (15 downto 0);
-    signal Shift_left_op : std_logic_vector (15 downto 0);
-    signal Shift_right_op : std_logic_vector (15 downto 0);
-    signal Jump_conditionallly_op : std_logic_vector (15 downto 0);
     
 
+
+  ---DECODER PARA LO DE LAS OPERACIONES:
+  --32 BITS  --- LOS TROCEAMOS Y LOS 4 PRIMEROS OPCODE.
+  --EN FUNCIÓN DE ESOS 4 SE TE ACTIVA UNO DE LOS 16 BITS .
+  
+    -- Componentes -----------------------------------
+  
+  
+  
   begin
+    -- Instanciacion de componentes  ----------------------------
 
-    Add_op <= std_logic_vector(signed(oper_1) + signed(oper_2));         --Add y Add Immediate
-    
-    Substract_op <= std_logic_vector(signed(oper_1) - signed(oper_2));   --Substract
-    
-    Or_op <= oper_1 or oper_2;  --Or
-    
-    Xor_op <= oper_1 xor oper_2;  --Xor
-    
-    And_op <= oper_1 and oper_2;      --And
-    
-    Not_op <= not oper_1;      --Not
-          --Load  -> pasamos oper_1 a out_alu directament
-          --Store -> pasamos oper_1 a out_alu directament
-    
-    Compare_op <= "0000000000000001" when (signed(oper_1) > signed(oper_2)) else
-                  "0000000000000000";    --Compare
-    
-    Shift_left_op <= std_logic_vector(shift_left(unsigned(oper_1), to_integer(unsigned(oper_2))));      --Shift Left   shift_left(oper_1, to_integer(unsigned(oper_2)))
-    
-    Shift_right_op <= std_logic_vector(shift_right(unsigned(oper_1), to_integer(unsigned(oper_2))));      --Shift Right
-          --Jump/Branch  -> pasamos oper_1 a out_alu directament
-    
-    Jump_conditionallly_op <= "1111111111111111" when (oper_1 = oper_2) else
-                              "1010101010101010";    --Jump/Branch conditionally
+    --  inicio ALU
+    process(clock)
+      variable Add_op : std_logic_vector (15 downto 0);
+      variable Substract_op : std_logic_vector (15 downto 0);
+      variable Or_op : std_logic_vector (15 downto 0);
+      variable Xor_op : std_logic_vector (15 downto 0);
+      variable And_op : std_logic_vector (15 downto 0);
+      variable Not_op : std_logic_vector (15 downto 0);
+      variable Compare_op : std_logic_vector (15 downto 0);
+      variable Shift_left_op : std_logic_vector (15 downto 0);
+      variable Shift_right_op : std_logic_vector (15 downto 0);
+      variable Jump_conditionallly_op : std_logic_vector (15 downto 0);
+    begin
+      Add_op := std_logic_vector(signed(oper_1) + signed(oper_2));         --Add y Add Immediate
+      
+      Substract_op := std_logic_vector(signed(oper_1) - signed(oper_2));   --Substract
+      
+      Or_op := oper_1 or oper_2;  --Or
+      
+      Xor_op := oper_1 xor oper_2;  --Xor
+      
+      And_op := oper_1 and oper_2;      --And
+      
+      Not_op := not oper_1;      --Not
+            --Load  -> pasamos oper_1 a out_alu directament
+            --Store -> pasamos oper_1 a out_alu directament
+      
+      if (signed(oper_1) > signed(oper_2)) then
+ 	      Compare_op := "0000000000000001";
+      else
+	      Compare_op := "0000000000000000";
+      end if;
+      
+      Shift_left_op := std_logic_vector(shift_left(unsigned(oper_1), to_integer(unsigned(oper_2))));      --Shift Left   shift_left(oper_1, to_integer(unsigned(oper_2)))
+      
+      Shift_right_op := std_logic_vector(shift_right(unsigned(oper_1), to_integer(unsigned(oper_2))));      --Shift Right
+            --Jump/Branch  -> pasamos oper_1 a out_alu directament
 
-    out_alu <=  Add_op 		when decoder_out = "10000000000000" else
-                Add_op 		when decoder_out = "01000000000000" else
-                Substract_op 		when decoder_out = "00100000000000" else
-                Or_op 		when decoder_out = "00010000000000" else
-                Xor_op 		when decoder_out = "00001000000000" else
-                And_op 		when decoder_out = "00000100000000" else
-                Not_op 		when decoder_out = "00000010000000" else
-                oper_1 		when decoder_out = "00000001000000" else
-                oper_1 		when decoder_out = "00000000100000" else
-                Compare_op 		when decoder_out = "00000000010000" else
-                Shift_left_op 	when decoder_out = "00000000001000" else
-                Shift_right_op 	when decoder_out = "00000000000100" else
-                oper_1 		when decoder_out = "00000000000010" else
-                Jump_conditionallly_op when decoder_out = "00000000000001";
+      if (oper_1 = oper_2) then
+ 	      Jump_conditionallly_op := "1111111111111111";
+      else
+	      Jump_conditionallly_op := "1010101010101010";
+      end if;
 
 
+
+      case decoder_out is
+        when "10000000000000" =>
+        out_alu <=  Add_op;
+        when "01000000000000" =>
+        out_alu <=  Add_op;
+        when "00100000000000" =>
+        out_alu <=  Substract_op;
+        when "00010000000000" =>
+        out_alu <=  Or_op;
+        when "00001000000000" =>
+        out_alu <=  Xor_op;
+        when "00000100000000" =>
+        out_alu <=  And_op;
+        when "00000010000000" =>
+        out_alu <=  Not_op;
+        when "00000001000000" =>
+        out_alu <=  oper_1;
+        when "00000000100000" =>
+        out_alu <=  oper_1;
+        when "00000000010000" =>
+        out_alu <=  Compare_op;
+        when "00000000001000" =>
+        out_alu <=  Shift_left_op;
+        when "00000000000100" =>
+        out_alu <=  Shift_right_op;
+        when "00000000000010" =>
+        out_alu <=  oper_1;
+        when "00000000000001" =>
+        out_alu <=  Jump_conditionallly_op;
+	when others =>
+	out_alu <=  "1010101010101010";
+      end case;
+    end process;
+    --  fin ALU
+  
+    -- PROCESOS --------------------------------------------------
+  
   end;
