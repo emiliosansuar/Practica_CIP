@@ -1,47 +1,20 @@
---TO DO: Máquina de estados (unidad de control), ALU, Banco de registro , Decoder
-
-
--- 3 registros para operaciones. 2 de valores y 1 de reultados 
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
-entity cpu is
+entity alu is
   port
   (
-    --entradas y salidas 
-    in_mem_to_cpu   : in std_logic_vector (31 downto 0);
-    out_cpu_to_mem  : out std_logic_vector (31 downto 0);
-    mem_address     : out std_logic_vector (5 downto 0);
-    --Bus de escritura
-    waddr           : out std_logic_vector (31 downto 0); --dirección de la data a escribir 
-    wavalid         : out std_logic; --validacion de la dirección de escritura 
-    wdata           : out std_logic_vector (31 downto 0); --data a escribir 
-    wdatav          : out std_logic; --validacin de la data a escribir 
-    wresp           : in std_logic_vector (1 downto 0); -- respuesta de la escritura 
-    wrespv          : in std_logic; -- validacion de la respuesta de escritura 
+    oper_1      : in std_logic_vector (15 downto 0);
+    oper_2      : in std_logic_vector (15 downto 0);
+    decoder_out : in std_logic_vector (13 downto 0);
+    clock       : in std_logic
 
-    --Bus de escritura 
-    raddr           : out std_logic_vector (31 downto 0); --direccion de la data a leer 
-    ravalid         : out std_logic; --validacion de la dirección de lectura
-    rdata           : in std_logic_vector (31 downto 0); --data a leer
-    rdatav          : in std_logic; --validación de la data a leer
-    rresp           : in std_logic_vector (1 downto 0); --respuesta de la leectura 
-    clock           : in std_logic
-    
+    out_alu     : out std_logic_vector (15 downto 0);
   );
-end entity cpu;
+end entity alu;
 
-architecture arch_cpu of cpu is
-
-    -- SIGNALS --------------------------------------
-    signal oper_1: std_logic_vector (15 downto 0);
-    signal oper_2: std_logic_vector (15 downto 0);
-    signal out_alu: std_logic_vector (15 downto 0);
-    signal decoder_in: std_logic_vector (4 downto 0);
-    signal decoder_out: std_logic_vector (13 downto 0);
-    signal prog_count: std_logic_vector (5 downto 0);
-    signal instruct_reg: std_logic_vector (31 downto 0);
+architecture arch_alu of alu is
 
     signal Add_op : std_logic_vector (15 downto 0);
     signal Substract_op : std_logic_vector (15 downto 0);
@@ -54,7 +27,6 @@ architecture arch_cpu of cpu is
     signal Shift_right_op : std_logic_vector (15 downto 0);
     signal Jump_conditionallly_op : std_logic_vector (15 downto 0);
     
-
   begin
 
     Add_op <= std_logic_vector(signed(oper_1) + signed(oper_2));         --Add y Add Immediate
