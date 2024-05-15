@@ -53,49 +53,51 @@ begin
   --write process
   process(clock)
   begin 
-    if(valid_write_ok = '1') then
+    -- if(rising_edge(clock)) then
+        if(valid_write_ok = '1') then
 
-      if (data_write_ok = '1') then
-        memory(to_integer(signed(WADDR))) <=  WDATA;
- 
-        WRESP <=  "00";
+          if (data_write_ok = '1') then
+            memory(to_integer(signed(WADDR))) <=  WDATA;
+    
+            WRESP <=  "00";
 
-        WRESPV <= '1';
-      else
-        WRESP <=  "01";
+            WRESPV <= '1';
+          else
+            WRESP <=  "01";
 
-        WRESPV <= '1';
-      end if;
+            WRESPV <= '1';
+          end if;
 
-    else
-      WRESP <=  "01";
-      WRESPV <= '0';
-    end if;
-
+        else
+          WRESP <=  "01";
+          WRESPV <= '0';
+        end if;
+    -- end if;
   end process;
 
   --read process
   process(clock)
   begin
-    if(RAVALID = '1') then
+    -- if(rising_edge(clock)) then
+        if(RAVALID = '1') then
 
-      if (data_read_ok = '1') then
-        RDATA <= memory(to_integer(signed(RADDR)));
- 
-        RRESP <=  "00";
+          if (data_read_ok = '1') then
+            RDATA <= memory(to_integer(signed(RADDR)));
+    
+            RRESP <=  "00";
 
-        RDATAV <= '1';
-      else
-        RRESP <=  "01";
+            RDATAV <= '1';
+          else
+            RRESP <=  "01";
 
-        RDATAV <= '1';
-      end if;
+            RDATAV <= '1';
+          end if;
 
-    else
-      RRESP <=  "01";
-      RDATAV <= '0';
-    end if;
+        else
+          RRESP <=  "01";
+          RDATAV <= '0';
+        end if;
+    --end if;
   end process;
 
-  
 end;

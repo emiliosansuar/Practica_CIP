@@ -18,7 +18,7 @@ architecture arch_alu of alu is
 
     component register_block is
         generic(
-        		data_size : integer := 5
+        		data_size : integer := 6 
     		); 
 
    		port(
