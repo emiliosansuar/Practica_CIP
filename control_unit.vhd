@@ -26,16 +26,15 @@ entity control_unit is
 
     RDATA : in std_logic_vector(31 downto 0);   --dato leido
     RRESP : in std_logic_vector(1 downto 0);  --respuesta de la lectura
-    RDATAV : in std_logic;     --validación de la lectura
+    RDATAV : in std_logic     --validación de la lectura
 
     --BANK REGISTER
-    read_not_write : out std_logic; -- para saber si leemos o escribimos en un register del banco 
-    address_register : out std_logic_vector(3 downto 0)
+    --read_not_write : out std_logic; -- para saber si leemos o escribimos en un register del banco 
+    --address_register : out std_logic_vector(3 downto 0)
 
     --ALU
-    oper_1      : out std_logic_vector (15 downto 0);
-    oper_2      : out std_logic_vector (15 downto 0);
-    out_alu     : in std_logic_vector (15 downto 0);
+    --oper_1      : out std_logic_vector (15 downto 0);
+    --oper_2      : out std_logic_vector (15 downto 0)
     
 
   );
@@ -48,17 +47,18 @@ architecture arch_control_unit of control_unit is
   signal InstructionReg : std_logic_vector(31 downto 0);
   signal PC : unsigned(5 downto 0) := "000000";
   signal PCaux : unsigned(5 downto 0) := "000000";
+  signal out_alu : std_logic_vector (15 downto 0);
 
   process(clock, reset)
 	begin
     if (reset = '1') then
-			currentState <= i0;
+			currentState <= i;
 		elsif (rising_edge(clock)) then
 			currentState <= nextState;
 		end if;
 	end process;
 
- process(clock, reset, currentState, WRESP, WRESPV, RDATA, RDATAV, RRESP) -- Result??? --Register_Value_Read???
+ process(currentState) -- Result??? --Register_Value_Read??? , currentState, WRESP, WRESPV, RDATA, RDATAV, RRESP
 	variable opCode_aux: std_logic_vector(3 downto 0) := (others=>'0');
 	variable res_aux: std_logic_vector(15 downto 0) := (others=>'0'); -- Los registros son de 16 bits
 	variable op1_aux: std_logic_vector(15 downto 0) := (others=>'0');
@@ -70,9 +70,9 @@ architecture arch_control_unit of control_unit is
 		case currentState is
 			when i =>
 				PCaux <= PC;
-				RADDR <= x"00000000";
-				WADDR <= x"00000000";
-				WDATA <= x"00000083"; --res = 2 + 3
+				--RADDR <= x"00000000";
+				WADDR <= "100000"; --posicion 32
+				WDATA <= "00000000000000000000000000000010"; --numero 2 
 				WAVALID <= '1';
 				WDATAV <= '1';
 				nextState <= i2;
@@ -85,8 +85,8 @@ architecture arch_control_unit of control_unit is
 				end if;
 
       when i3 =>
-				WADDR <= x"00000001";
-				WDATA  <= x"A0000343"; --res = "001101" << 3
+				WADDR <= "100001"; --direccion 33
+				WDATA  <= "00000000000000000000000000001000"; -- num 8
 				WAVALID <= '1';
 				WDATAV <= '1';
 				nextState <= i4;
@@ -98,10 +98,32 @@ architecture arch_control_unit of control_unit is
 					nextState <= i5;
 				end if;
 
-    --when i5 =>
-     --if() then
-    
-    --end if;
+      when i5 =>
+				WADDR <= "000000"; --direccion 0
+				WDATA  <= "00000000000000000000000000001000"; -- 32 bits instruccion
+				WAVALID <= '1';
+				WDATAV <= '1';
+				nextState <= i6;
+
+			when i6 =>
+				if(WRESPV = '1') then
+					WAVALID <= '0';
+					WDATAV <= '0';
+					nextState <= i7;
+				end if;
+
+
+
+        
+
+      when i8 =>
+        WADDR <= "100010"; --direccion 34
+        WDATA  <= out_alu; -- 
+        WAVALID <= '1';
+        WDATAV <= '1';
+        nextState <= i9;
+        
+     
 
     end case;
   end process;
