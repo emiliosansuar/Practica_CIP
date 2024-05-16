@@ -58,6 +58,24 @@ architecture arch_control_unit of control_unit is
 		end if;
 	end process;
 
+  -- rs = x // rt = y // rd = z // constat = C
+  --  
+  -- "00000000zzzzzz000000yyyyyyxxxxxx" -> ADD operation                RRR
+  -- "00010000zzzzzzxxxxxx0000CCCCCCCC" -> ADD inmediate operation      RRImm
+  -- "00100000zzzzzz000000yyyyyyxxxxxx" -> Substract operation          RRR
+  -- "00110000zzzzzz000000yyyyyyxxxxxx" -> Or operation                 RRR
+  -- "01000000zzzzzz000000yyyyyyxxxxxx" -> Xor operation                RRR
+  -- "01010000zzzzzz000000yyyyyyxxxxxx" -> And operation                RRR
+  -- "01100000zzzzzz000000yyyyyy000000" -> Not operation                RR
+  -- "01110000zzzzzz000000yyyyyy000000" -> Load operation               RR
+  -- "10000000zzzzzz000000yyyyyy000000" -> Store operation              RR
+  -- "10010000zzzzzz000000yyyyyyxxxxxx" -> Compare operation            RRR
+  -- "10100000zzzzzz000000yyyyyyxxxxxx" -> Shift left operation         RRR
+  -- "10110000zzzzzz000000yyyyyyxxxxxx" -> Shift right operation        RRR
+  -- "11000000zzzzzz000000000000000000" -> Jumpt/branch operation       R
+  -- "11010000zzzzzz000000yyyyyyxxxxxx" -> Jump/branch conditional operation  RRR
+  
+
  process(currentState) -- Result??? --Register_Value_Read??? , currentState, WRESP, WRESPV, RDATA, RDATAV, RRESP
 	variable opCode_aux: std_logic_vector(3 downto 0) := (others=>'0');
 	variable res_aux: std_logic_vector(15 downto 0) := (others=>'0'); -- Los registros son de 16 bits
