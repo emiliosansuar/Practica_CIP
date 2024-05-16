@@ -72,7 +72,7 @@ architecture arch_control_unit of control_unit is
 				PCaux <= PC;
 				RADDR <= x"00000000";
 				WADDR <= x"00000000";
-				WDATA <= x"00000083"; --res = 2 + 3
+				WDATA <= x"00000083"; --res = 2 mas  3
 				WAVALID <= '1';
 				WDATAV <= '1';
 				nextState <= i2;
@@ -86,7 +86,7 @@ architecture arch_control_unit of control_unit is
 
       when i3 =>
 				WADDR <= x"00000001";
-				WDATA  <= x"A0000343"; --res = "001101" << 3
+				WDATA  <= x"A0000343"; 
 				WAVALID <= '1';
 				WDATAV <= '1';
 				nextState <= i4;
