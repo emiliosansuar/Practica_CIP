@@ -1,53 +1,36 @@
---Máquina de estados
+--Testbench 1 Fibonaci
 
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
-entity control_unit is
-  port
-  (
-    clock : in std_logic;     --validación de la lectura
-    reset : in std_logic;
+entity testbench1 is
+end testbench1;
 
-    --MEMORIA
-    --entradas i salidas para escritura
-    WADDR : out std_logic_vector(5 downto 0);   --dirección donde escribir
-    WDATA : out std_logic_vector(31 downto 0);   --dato a escribir
-    WAVALID : out std_logic;     --validación de la dirección de escritura
-    WDATAV : out std_logic;      --validación del dato
-
-    WRESP : in std_logic_vector(1 downto 0);  --respuesta de la escritura
-    WRESPV : in std_logic;     --validación de la escritura
-
-    --entradas i salidas para lectura
-    RADDR : out std_logic_vector(5 downto 0);   --dirección donde leer
-    RAVALID : out std_logic;     --validacion de la dirección de lectura
-
-    RDATA : in std_logic_vector(31 downto 0);   --dato leido
-    RRESP : in std_logic_vector(1 downto 0);  --respuesta de la lectura
-    RDATAV : in std_logic     --validación de la lectura
-
-    --BANK REGISTER
-    --read_not_write : out std_logic; -- para saber si leemos o escribimos en un register del banco 
-    --address_register : out std_logic_vector(3 downto 0)
-
-    --ALU
-    --oper_1      : out std_logic_vector (15 downto 0);
-    --oper_2      : out std_logic_vector (15 downto 0)
+architecture arch_testbench1 of testbench1 is
+    --component
+    component top is
+        port(
+            clock           : in std_logic;
+            reset           : in std_logic;
+            init/!Run_mode  : in std_logic;
     
+            WADDR_init : out std_logic_vector(5 downto 0);   --dirección donde escribir
+            WDATA_init : out std_logic_vector(31 downto 0);   --dato a escribir
+            WAVALID_init : out std_logic;     --validación de la dirección de escritura
+            WDATAV_init : out std_logic;      --validación del dato
+        );
+    end component;
 
-  );
-end entity control_unit;
-
-architecture arch_control_unit of control_unit is
-  type estadoTipo is (i, i2, i3, i4, i5, i6, i7, i8, i9, i10, s0, s1, s2, s3, s4, s5, s6, s7, s8, s9, s10);
-  signal currentState : estadoTipo;
-  signal nextState : estadoTipo;
-  signal InstructionReg : std_logic_vector(31 downto 0);
-  signal PC : unsigned(5 downto 0) := "000000";
-  signal PCaux : unsigned(5 downto 0) := "000000";
-  signal out_alu : std_logic_vector (15 downto 0);
+    --ports 
+    signal clock_s : std_logic;
+    signal reset_s : std_logic;
+    signal init/!Run_mode_s : std_logic;
+    signal WADDR_init_s :  std_logic_vector(5 downto 0);   --dirección donde escribir
+    signal WDATA_init_s : std_logic_vector(31 downto 0);   --dato a escribir
+    signal WAVALID_init_s : std_logic;     --validación de la dirección de escritura
+    signal WDATAV_init_s : std_logic;      --validación del dato
+  
 
   process(clock, reset)
 	begin
@@ -59,7 +42,6 @@ architecture arch_control_unit of control_unit is
 	end process;
 
   -- rs = x // rt = y // rd = z // constat = C
-  --  
   -- "00000000zzzzzz000000yyyyyyxxxxxx" -> ADD operation                RRR
   -- "00010000zzzzzzxxxxxx0000CCCCCCCC" -> ADD inmediate operation      RRImm
   -- "00100000zzzzzz000000yyyyyyxxxxxx" -> Substract operation          RRR
@@ -76,7 +58,7 @@ architecture arch_control_unit of control_unit is
   -- "11010000zzzzzz000000yyyyyyxxxxxx" -> Jump/branch conditional operation  RRR
   
 
- process(currentState) -- Result??? --Register_Value_Read??? , currentState, WRESP, WRESPV, RDATA, RDATAV, RRESP
+  process(currentState) -- Result??? --Register_Value_Read??? , currentState, WRESP, WRESPV, RDATA, RDATAV, RRESP
 	variable opCode_aux: std_logic_vector(3 downto 0) := (others=>'0');
 	variable res_aux: std_logic_vector(15 downto 0) := (others=>'0'); -- Los registros son de 16 bits
 	variable op1_aux: std_logic_vector(15 downto 0) := (others=>'0');
@@ -130,20 +112,33 @@ architecture arch_control_unit of control_unit is
 					nextState <= i7;
 				end if;
 
-        when i7 =>
+        when i5 =>
           WADDR <= "000011"; --direccion 3
           WDATA  <= "01110000000011000000000001000000"; --load en R3 de 0x(R1)             
           WAVALID <= '1';
           WDATAV <= '1';
-          nextState <= i8;
+          nextState <= i6;
 
-			when i8 =>
+			when i6 =>
 				if(WRESPV = '1') then
 					WAVALID <= '0';
 					WDATAV <= '0';
-					nextState <= i9;
+					nextState <= i7;
 				end if;
+
+
+
+        
+
+      when i8 =>
+        WADDR <= "100010"; --direccion 34
+        WDATA  <= out_alu; -- 
+        WAVALID <= '1';
+        WDATAV <= '1';
+        nextState <= i9;
+        
+     
 
     end case;
   end process;
-end arch_control_unit; 
+end arch_testbench1; 
