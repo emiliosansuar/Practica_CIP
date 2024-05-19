@@ -10,6 +10,7 @@ entity control_unit is
     clock : in std_logic;     --validación de la lectura
     reset : in std_logic;
 
+    init_enable :in std_logic;
 
     --MEMORIA
     --entradas i salidas para escritura
@@ -42,6 +43,7 @@ entity control_unit is
 end entity control_unit;
 
 architecture arch_control_unit of control_unit is
+  
   type estadoTipo is (s0, s1, s2, s3, s4, s5, s6, s7, s8, s9, s10);
   signal currentState : estadoTipo;
   signal nextState : estadoTipo;
