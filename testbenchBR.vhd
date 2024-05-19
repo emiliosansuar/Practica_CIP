@@ -77,3 +77,7 @@ begin
         wait;
     end process;
 end tb_arch;
+
+
+
+
