@@ -2,7 +2,7 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
-entity ALU is
+entity ALU is 
   port
   (
     oper_1      : in std_logic_vector (15 downto 0); -- Primer operando de la ALU
