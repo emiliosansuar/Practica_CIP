@@ -24,9 +24,9 @@ architecture arch_bank_register of bank_register is
         seq_comb_state : process(read_not_write, address_register, reg_in_value, clock) begin
            -- if(rising_edge(clock)) then
                 if read_not_write = '1' then -- Operación de lectura
-                    dataOut <= registers(to_integer(unsigned (address_register)));
+                    dataOut <= registers(to_integer(unsigned address_register));
                 elsif read_not_write = '0' then -- Operación de escritura
-                    registers(to_integer(unsigned (address_register))) <= reg_in_value;
+                    registers(to_integer(unsigned address_register)) <= reg_in_value;
                 end if;
            -- end if;
         end process;
