@@ -7,7 +7,7 @@ entity top is
     port(
         clock_top           : in std_logic;
         reset_top           : in std_logic;
-        Run_mode  : in std_logic; -- init = 1 / execute = 0
+        Run_mode  : in std_logic; -- init = 0 / execute = 1
 
         WADDR_init : in std_logic_vector(31 downto 0);   --dirección donde escribir
         WDATA_init : in std_logic_vector(31 downto 0);   --dato a escribir
@@ -22,11 +22,12 @@ end entity;
 
 architecture top_arch of top is
     
-    component control_unit is
+    component cpu is
 
         port(
             clock : in std_logic;     --validación de la lectura
             reset : in std_logic;
+            init_enable  : in std_logic;
             
             --MEMORIA
             --entradas i salidas para escritura
@@ -72,20 +73,20 @@ architecture top_arch of top is
         );
     end component;
 
-    signal WADDR_control_unit   : std_logic_vector(31 downto 0);
-    signal WDATA_control_unit   : std_logic_vector(31 downto 0);
-    signal WAVALID_control_unit : std_logic;
-    signal WDATAV_control_unit  : std_logic;
+    signal WADDR_cpu   : std_logic_vector(31 downto 0);
+    signal WDATA_cpu   : std_logic_vector(31 downto 0);
+    signal WAVALID_cpu : std_logic;
+    signal WDATAV_cpu  : std_logic;
 
-    signal WRESP_control_unit   : std_logic_vector(1 downto 0);
-    signal WRESPV_control_unit  : std_logic;
+    signal WRESP_cpu   : std_logic_vector(1 downto 0);
+    signal WRESPV_cpu  : std_logic;
 
-    signal RADDR_control_unit   : std_logic_vector(31 downto 0);   --dirección donde leer
-    signal RAVALID_control_unit : std_logic;     --validacion de la dirección de lectura
+    signal RADDR_cpu   : std_logic_vector(31 downto 0);   --dirección donde leer
+    signal RAVALID_cpu : std_logic;     --validacion de la dirección de lectura
 
-    signal RDATA_control_unit   : std_logic_vector(31 downto 0);   --dato leido
-    signal RRESP_control_unit   : std_logic_vector(1 downto 0);  --respuesta de la lectura
-    signal RDATAV_control_unit  : std_logic;
+    signal RDATA_cpu   : std_logic_vector(31 downto 0);   --dato leido
+    signal RRESP_cpu   : std_logic_vector(1 downto 0);  --respuesta de la lectura
+    signal RDATAV_cpu  : std_logic;
 
     signal WADDR_mux   : std_logic_vector(31 downto 0);
     signal WDATA_mux   : std_logic_vector(31 downto 0);
@@ -97,27 +98,28 @@ architecture top_arch of top is
 
 begin
     
-    bloque_control_unit : control_unit
+    bloque_cpu : cpu
     port map(
         clock => clock_top,
         reset => reset_top,
+        init_enable => Run_mode,
 
         --entradas i salidas para escritura
-        WADDR => WADDR_control_unit,
-        WDATA => WDATA_control_unit,
-        WAVALID => WAVALID_control_unit,
-        WDATAV => WDATAV_control_unit,
+        WADDR => WADDR_cpu,
+        WDATA => WDATA_cpu,
+        WAVALID => WAVALID_cpu,
+        WDATAV => WDATAV_cpu,
     
-        WRESP => WRESP_control_unit,
-        WRESPV => WRESPV_control_unit,
+        WRESP => WRESP_cpu,
+        WRESPV => WRESPV_cpu,
     
         --entradas i salidas para lectura
-        RADDR => RADDR_control_unit,
-        RAVALID => RAVALID_control_unit,
+        RADDR => RADDR_cpu,
+        RAVALID => RAVALID_cpu,
     
-        RDATA => RDATA_control_unit,
-        RRESP => RRESP_control_unit,
-        RDATAV => RDATAV_control_unit
+        RDATA => RDATA_cpu,
+        RRESP => RRESP_cpu,
+        RDATAV => RDATAV_cpu
     );
 
     bloque_memoria : memoria
@@ -134,26 +136,32 @@ begin
         WRESPV => WRESPV_mux,
     
         --entradas i salidas para lectura
-        RADDR => RADDR_control_unit(5 downto 0),
-        RAVALID => RAVALID_control_unit,
+        RADDR => RADDR_cpu(5 downto 0),
+        RAVALID => RAVALID_cpu,
     
-        RDATA => RDATA_control_unit,
-        RRESP => RRESP_control_unit,
-        RDATAV => RDATAV_control_unit
+        RDATA => RDATA_cpu,
+        RRESP => RRESP_cpu,
+        RDATAV => RDATAV_cpu
     );
 
 
-    WADDR_mux   <=  WADDR_control_unit when Run_mode = '0' else
+    WADDR_mux   <=  WADDR_cpu when Run_mode = '1' else
                     WADDR_init;
 
-    WDATA_mux   <=  WDATA_control_unit when Run_mode = '0' else
+    WDATA_mux   <=  WDATA_cpu when Run_mode = '1' else
                     WDATA_init;
 
-    WAVALID_mux <=  WAVALID_control_unit when Run_mode = '0' else
+    WAVALID_mux <=  WAVALID_cpu when Run_mode = '1' else
                     WAVALID_init;
 
-    WDATAV_mux  <=  WDATAV_control_unit when Run_mode = '0' else
+    WDATAV_mux  <=  WDATAV_cpu when Run_mode = '1' else
                     WDATAV_init;
+
+    WRESP_cpu  <=  "00" when Run_mode = '1' else
+                    WRESP_mux;
+
+    WRESPV_cpu  <= '0' when Run_mode = '1' else
+                    WRESPV_mux;
 
     WRESP_init  <=  "00" when Run_mode = '0' else
                     WRESP_mux;

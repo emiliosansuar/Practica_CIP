@@ -52,58 +52,6 @@ architecture arch_control_unit of control_unit is
   signal PCaux : unsigned(5 downto 0) := "000000";
   signal out_alu : std_logic_vector (15 downto 0);
 
-
-  component alu is
-		port(
-			oper_1      : in std_logic_vector (15 downto 0);
-    			oper_2      : in std_logic_vector (15 downto 0);
-    			decoder_out : in std_logic_vector (3 downto 0);
-    			clock       : in std_logic;
-
-    			out_alu     : out std_logic_vector (15 downto 0)
-		);
-	end component;
-
-  component register_block is
-		generic(
-        		data_size : integer := 5
-    		); 
-
-   		port(
-        		data_in : in std_logic_vector((data_size - 1) downto 0);
-        		enable  : in std_logic;
-        		clock   : in std_logic;
-
-        		data_out : out std_logic_vector((data_size - 1) downto 0)
-    		);
-	end component;
-
-
-  begin
-    
-    alu_tb : alu
-    port map(
-      oper_1 => oper_1_tb,
-      oper_2 => oper_2_tb,
-      decoder_out => decoder_out_tb,
-      clock => clock_tb,
-
-      out_alu => out_alu_tb
-    );
-
-    modelo : register_block
-    generic map(
-      data_size => --tamaño en decimal
-    )
-    port map(
-      data_in => ,
-      enable => ,
-      clock => ,
-
-      data_out => 
-    );
-
-
 begin
 
   process(clock, reset) begin

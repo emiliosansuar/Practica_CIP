@@ -71,7 +71,7 @@ Z17 !s110 1716113622
 !i10b 1
 Z18 !s108 1716113622.000000
 Z19 !s90 -reportprogress|300|-work|work|Z:/Desktop/Uni 23-24/CIP/Practica/Practica_CIP/control_unit.vhd|
-!s107 Z:/Desktop/Uni 23-24/CIP/Practica/Practica_CIP/control_unit.vhd|
+Z20 !s107 Z:/Desktop/Uni 23-24/CIP/Practica/Practica_CIP/control_unit.vhd|
 !i113 1
 R12
 R13
@@ -91,7 +91,7 @@ R17
 !i10b 1
 R18
 R19
-Z20 !s107 Z:/Desktop/Uni 23-24/CIP/Practica/Practica_CIP/control_unit.vhd|
+R20
 !i113 1
 R12
 R13
@@ -138,26 +138,69 @@ R27
 !i113 1
 R12
 R13
+Edecoder
+Z28 w1716118630
+R2
+R3
+R4
+!i122 16
+R0
+Z29 8Z:/Desktop/Uni 23-24/CIP/Practica/Practica_CIP/decoder.vhd
+Z30 FZ:/Desktop/Uni 23-24/CIP/Practica/Practica_CIP/decoder.vhd
+l0
+L6 1
+VX?eMITi9biFRb8zf9jZ_51
+!s100 <]@=:=f7J^mPO@Te@WRmh0
+R7
+32
+Z31 !s110 1716118641
+!i10b 1
+Z32 !s108 1716118641.000000
+Z33 !s90 -reportprogress|300|-work|work|Z:/Desktop/Uni 23-24/CIP/Practica/Practica_CIP/decoder.vhd|
+!s107 Z:/Desktop/Uni 23-24/CIP/Practica/Practica_CIP/decoder.vhd|
+!i113 1
+R12
+R13
+Aarch_decoder
+R2
+R3
+R4
+DEx4 work 7 decoder 0 22 X?eMITi9biFRb8zf9jZ_51
+!i122 16
+l22
+L18 38
+V6?2?SlLl4=DV;7]X2PEIg1
+!s100 bO_HGdC=h;@JgdVn?]`QU1
+R7
+32
+R31
+!i10b 1
+R32
+R33
+Z34 !s107 Z:/Desktop/Uni 23-24/CIP/Practica/Practica_CIP/decoder.vhd|
+!i113 1
+R12
+R13
 Etestbench1
-Z28 w1716112587
+Z35 w1716112587
 R2
 R3
 R4
 !i122 1
 R0
-Z29 8Z:/Desktop/Uni 23-24/CIP/Practica/Practica_CIP/testbench1.vhd
-Z30 FZ:/Desktop/Uni 23-24/CIP/Practica/Practica_CIP/testbench1.vhd
+Z36 8Z:/Desktop/Uni 23-24/CIP/Practica/Practica_CIP/testbench1.vhd
+Z37 FZ:/Desktop/Uni 23-24/CIP/Practica/Practica_CIP/testbench1.vhd
 l0
 L7 1
 V91_WBUBbBhoH[?eZFhQcd1
 !s100 XfZC==LE:_`5UOiC5RQEP3
 R7
 32
-Z31 !s110 1716112592
+Z38 !s110 1716112592
 !i10b 1
-Z32 !s108 1716112592.000000
-Z33 !s90 -reportprogress|300|-work|work|Z:/Desktop/Uni 23-24/CIP/Practica/Practica_CIP/testbench1.vhd|
-Z34 !s107 Z:/Desktop/Uni 23-24/CIP/Practica/Practica_CIP/testbench1.vhd|
+Z39 !s108 1716112592.000000
+Z40 !s90 -reportprogress|300|-work|work|Z:/Desktop/Uni 23-24/CIP/Practica/Practica_CIP/testbench1.vhd|
+Z41 !s107 Z:/Desktop/Uni 23-24/CIP/Practica/Practica_CIP/testbench1.vhd|
 !i113 1
 R12
 R13
@@ -173,11 +216,11 @@ VF2fQAP>>KN1W;LN:@4XFn1
 !s100 aELI8KZ]`AM9L_BTgWFTm0
 R7
 32
-R31
+R38
 !i10b 1
-R32
-R33
-R34
+R39
+R40
+R41
 !i113 1
 R12
 R13
