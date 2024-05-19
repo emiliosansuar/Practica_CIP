@@ -4,31 +4,36 @@ use ieee.numeric_std.all;
 
 entity bankRegister is
     Port (
-        reg_in_value : in std_logic_vector(15 downto 0); --operacion de escritura
-        read_not_write : in std_logic; -- entrada para saber si leemos o escribimos en un register del banco 
-        dataOut : out std_logic_vector(15 downto 0); --lo que irá conectado a los dos registros de los opers
-        address_register : in std_logic_vector(3 downto 0);
-        clock : in std_logic     --validación de la lectura
+        reg_in_value : in std_logic_vector(15 downto 0);    -- Entrada de datos
+        read_not_write : in std_logic;                      -- Entrada que determinará si es una operación de lectura o escritura (read = 1 / write = 0)
+        dataOut : out std_logic_vector(15 downto 0);        -- Salida de datos
+        address_register : in std_logic_vector(3 downto 0); -- Dirección del registro a leer o escribir
+        clock : in std_logic                                -- Reloj
     );
 end bankRegister;
 
 architecture arch_bankRegister of bankRegister is
 
-    type banc_regi is array (0 to 15) of std_logic_vector(15 downto 0); -- 16 posiciones de 16 bits cada una, es decir tendremos 16 registros con 16 bits cada uno.
+    -- Declaramos de un tipo de array para representar los 16 posibles registros del banco de registro.
+    type banc_regi is array (0 to 15) of std_logic_vector(15 downto 0); -- 16 registros de 16 bits cada uno
     signal registers : banc_regi := (
-        others => (others => '0')  -- Inicializamos todas las posiciones a 16 bits a '0'
+        others => (others => '0')  -- Inicializaremos todos los registros a cero
     );
    
+begin
+    seq_comb_state : process(clock)
     begin
-
-        seq_comb_state : process(clock) begin
-		if (rising_edge(clock)) then
-                	if read_not_write = '1' then -- Operación de lectura
-                    		dataOut <= registers(to_integer(unsigned (address_register)));
-                	elsif read_not_write = '0' then -- Operación de escritura
-                    		registers(to_integer(unsigned (address_register))) <= reg_in_value;
-                	end if;
-           	end if;
-        end process;
-
+	-- Comprobaremos si hay flanco de subida en la señal de reloj
+        if (rising_edge(clock)) then  
+	    -- Comprobamos si queremos hacer una lectura o escritura. En este caso, si valor 1 significa que haremos la lectura
+            if read_not_write = '1' then 
+                -- Leemos el valor del registro en la dirección indicada y lo asignamos a la salida
+                dataOut <= registers(to_integer(unsigned (address_register)));
+	    -- En este caso, si valor 0 significa que haremos la escritura
+            elsif read_not_write = '0' then 
+                -- Escribimps el valor introducido en el registro en la dirección indicada
+                registers(to_integer(unsigned (address_register))) <= reg_in_value;
+            end if;
+        end if;
+    end process;
 end arch_bankRegister;
