@@ -28,10 +28,10 @@ Z8 !s110 1716113078
 !i10b 1
 Z9 !s108 1716113078.000000
 Z10 !s90 -reportprogress|300|-work|work|Z:/Desktop/Uni 23-24/CIP/Practica/Practica_CIP/bank_register.vhd|
-!s107 Z:/Desktop/Uni 23-24/CIP/Practica/Practica_CIP/bank_register.vhd|
+Z11 !s107 Z:/Desktop/Uni 23-24/CIP/Practica/Practica_CIP/bank_register.vhd|
 !i113 1
-Z11 o-work work
-Z12 tExplicit 1 CvgOpt 0
+Z12 o-work work
+Z13 tExplicit 1 CvgOpt 0
 Aarch_bank_register
 R2
 R3
@@ -48,33 +48,119 @@ R8
 !i10b 1
 R9
 R10
-Z13 !s107 Z:/Desktop/Uni 23-24/CIP/Practica/Practica_CIP/bank_register.vhd|
-!i113 1
 R11
+!i113 1
 R12
+R13
+Econtrol_unit
+Z14 w1716113617
+R2
+R3
+R4
+!i122 11
+R0
+Z15 8Z:/Desktop/Uni 23-24/CIP/Practica/Practica_CIP/control_unit.vhd
+Z16 FZ:/Desktop/Uni 23-24/CIP/Practica/Practica_CIP/control_unit.vhd
+l0
+L7 1
+V1;0O7l_^e9nfN5HfoL9gO0
+!s100 ;d2Wd^SZA[WAIRYb3T8Ei1
+R7
+32
+Z17 !s110 1716113622
+!i10b 1
+Z18 !s108 1716113622.000000
+Z19 !s90 -reportprogress|300|-work|work|Z:/Desktop/Uni 23-24/CIP/Practica/Practica_CIP/control_unit.vhd|
+!s107 Z:/Desktop/Uni 23-24/CIP/Practica/Practica_CIP/control_unit.vhd|
+!i113 1
+R12
+R13
+Aarch_control_unit
+R2
+R3
+R4
+DEx4 work 12 control_unit 0 22 1;0O7l_^e9nfN5HfoL9gO0
+!i122 11
+l53
+L44 54
+Vm]azEzEF887`2ezKcz6UK3
+!s100 f17h7jM2UFOacQG:K6>_P2
+R7
+32
+R17
+!i10b 1
+R18
+R19
+Z20 !s107 Z:/Desktop/Uni 23-24/CIP/Practica/Practica_CIP/control_unit.vhd|
+!i113 1
+R12
+R13
+Ecpu
+Z21 w1714994387
+R2
+R3
+R4
+!i122 9
+R0
+Z22 8Z:/Desktop/Uni 23-24/CIP/Practica/Practica_CIP/cpu.vhd
+Z23 FZ:/Desktop/Uni 23-24/CIP/Practica/Practica_CIP/cpu.vhd
+l0
+L9 1
+VHE[O_86Zl6J83H[i6_fMQ3
+!s100 I5aa<]l=mDFBkH:WjFz>21
+R7
+32
+Z24 !s110 1716113517
+!i10b 1
+Z25 !s108 1716113517.000000
+Z26 !s90 -reportprogress|300|-work|work|Z:/Desktop/Uni 23-24/CIP/Practica/Practica_CIP/cpu.vhd|
+Z27 !s107 Z:/Desktop/Uni 23-24/CIP/Practica/Practica_CIP/cpu.vhd|
+!i113 1
+R12
+R13
+Aarch_cpu
+R2
+R3
+R4
+DEx4 work 3 cpu 0 22 HE[O_86Zl6J83H[i6_fMQ3
+!i122 9
+l62
+L35 114
+VEO^HNm5kOkCQL@OPOW[4c0
+!s100 =<GC9QC@2RM;0oeNk59f_0
+R7
+32
+R24
+!i10b 1
+R25
+R26
+R27
+!i113 1
+R12
+R13
 Etestbench1
-Z14 w1716112587
+Z28 w1716112587
 R2
 R3
 R4
 !i122 1
 R0
-Z15 8Z:/Desktop/Uni 23-24/CIP/Practica/Practica_CIP/testbench1.vhd
-Z16 FZ:/Desktop/Uni 23-24/CIP/Practica/Practica_CIP/testbench1.vhd
+Z29 8Z:/Desktop/Uni 23-24/CIP/Practica/Practica_CIP/testbench1.vhd
+Z30 FZ:/Desktop/Uni 23-24/CIP/Practica/Practica_CIP/testbench1.vhd
 l0
 L7 1
 V91_WBUBbBhoH[?eZFhQcd1
 !s100 XfZC==LE:_`5UOiC5RQEP3
 R7
 32
-Z17 !s110 1716112592
+Z31 !s110 1716112592
 !i10b 1
-Z18 !s108 1716112592.000000
-Z19 !s90 -reportprogress|300|-work|work|Z:/Desktop/Uni 23-24/CIP/Practica/Practica_CIP/testbench1.vhd|
-Z20 !s107 Z:/Desktop/Uni 23-24/CIP/Practica/Practica_CIP/testbench1.vhd|
+Z32 !s108 1716112592.000000
+Z33 !s90 -reportprogress|300|-work|work|Z:/Desktop/Uni 23-24/CIP/Practica/Practica_CIP/testbench1.vhd|
+Z34 !s107 Z:/Desktop/Uni 23-24/CIP/Practica/Practica_CIP/testbench1.vhd|
 !i113 1
-R11
 R12
+R13
 Aarch_testbench1
 R2
 R3
@@ -87,11 +173,11 @@ VF2fQAP>>KN1W;LN:@4XFn1
 !s100 aELI8KZ]`AM9L_BTgWFTm0
 R7
 32
-R17
+R31
 !i10b 1
-R18
-R19
-R20
+R32
+R33
+R34
 !i113 1
-R11
 R12
+R13
