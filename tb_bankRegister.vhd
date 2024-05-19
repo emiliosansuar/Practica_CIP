@@ -2,17 +2,17 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
-entity testbenchBR is
-end testbenchBR;
+entity tb_bankRegister is
+end tb_bankRegister;
 
-architecture tb_arch of testbenchBR is
+architecture tb_arch of tb_bankRegister is
     signal reg_in_value_tb : std_logic_vector(15 downto 0);
     signal read_not_write_tb : std_logic;
     signal dataOut_tb : std_logic_vector(15 downto 0);
     signal address_register_tb : std_logic_vector(3 downto 0);
     signal clock_tb : std_logic := '0';
 
-    component bank_register
+    component bankRegister
         port(
             reg_in_value : in std_logic_vector(15 downto 0);
             read_not_write : in std_logic;
@@ -22,10 +22,8 @@ architecture tb_arch of testbenchBR is
         );
     end component;
 
-    
-
 begin
-    DUT_bank_register : bank_register
+    DUT_bankRegister : bankRegister
         port map (
             reg_in_value => reg_in_value_tb,
             read_not_write => read_not_write_tb,
@@ -34,8 +32,8 @@ begin
             clock => clock_tb
         );
 
-     -- Generamos una señal de reloj clock que cambia de estado de alto a bajo y viceversa cada 50 ns.  
-    clock_tb <= not clock_tb after 50 ns; 
+     -- Generamos una señal de reloj clock que cambia de estado de alto a bajo y viceversa cada 5 ns.  
+    clock_tb <= not clock_tb after 5 ns; 
 
     stim_process: process 
 
@@ -44,40 +42,36 @@ begin
         reg_in_value_tb <= "0000000000000001"; -- 1
         address_register_tb <= "0000";
         read_not_write_tb <= '0';
-        wait for clk_period;
+        wait for 10 ns;
 
         -- Write to register 1
         reg_in_value_tb <= "0000000000000100"; -- 4
         address_register_tb <= "0001";
         read_not_write_tb <= '0';
-        wait for 200 ns;
+        wait for 10 ns;
 
         -- Read from register 0
         address_register_tb <= "0000";
         read_not_write_tb <= '1';
-        wait for 200 ns;
+        wait for 10 ns;
 
         -- Read from register 1
         address_register_tb <= "0001";
         read_not_write_tb <= '1';
-        wait for 200 ns;
+        wait for 10 ns;
 
 
         -- Write to register 0 again
-        reg_in_value_tb <= x"0000000000010000"; -- 16
+        reg_in_value_tb <= "0000000000010000"; -- 16
         address_register_tb <= "0000";
         read_not_write_tb <= '0';
-        wait for 200 ns;
+        wait for 10 ns;
 
         -- Read from register 0
         address_register_tb <= "0000";
         read_not_write_tb <= '1';
-        wait for 200 ns;
+        wait for 10 ns;
         
         wait;
     end process;
 end tb_arch;
-
-
-
-

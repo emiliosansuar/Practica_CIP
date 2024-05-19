@@ -37,7 +37,7 @@ architecture arch_decoder of decoder is
                     address_rs  <= instruction(11 downto 6);
                     type_oper <= "01"; --RR
                     
-                when "1100" => 
+                when "1101" => 
                     address_rd  <= instruction(23 downto 18);
                     type_oper <= "10"; --R
                     
