@@ -2,7 +2,7 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
-entity ALU is 
+entity ALU_block is 
   port
   (
     oper_1      : in std_logic_vector (15 downto 0); -- Primer operando de la ALU
@@ -11,9 +11,9 @@ entity ALU is
     clock       : in std_logic;                      -- Señal de reloj
     out_alu     : out std_logic_vector (15 downto 0) -- Resultado de la operación de la ALU
   );
-end entity ALU;
+end entity ALU_block;
 
-architecture arch_alu of ALU is
+architecture arch_alu of ALU_block is
 
     -- Importamos el componente del bloque de registro
     component registerBlock is

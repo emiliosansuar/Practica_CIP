@@ -33,44 +33,44 @@ end entity cpu;
 
 architecture arch_cpu of cpu is
 
-  component register_block is
-		generic(
+  component registerBlock is
+    generic(
       data_size : integer := 5
     ); 
 
-   	port(
+    port(
       data_in : in std_logic_vector((data_size - 1) downto 0);
       enable  : in std_logic;
       clock   : in std_logic;
 
       data_out : out std_logic_vector((data_size - 1) downto 0)
     );
-	end component;
+  end component;
 
-  component alu is
-		port(
-			oper_1      : in std_logic_vector (15 downto 0);
+  component ALU_block is
+    port(
+      oper_1      : in std_logic_vector (15 downto 0);
       oper_2      : in std_logic_vector (15 downto 0);
       decoder_out : in std_logic_vector (3 downto 0);
       clock       : in std_logic;
 
       out_alu     : out std_logic_vector (15 downto 0)
-		);
-	end component;
+    );
+    end component;
 
-  component decoder is
-		port(
+  component Decoder_Block is
+    port(
       instruction : in std_logic_vector(31 downto 0); 
       opCode      : out std_logic_vector(3 downto 0);
       address_rd  : out std_logic_vector(5 downto 0);
       address_rs  : out std_logic_vector(5 downto 0);
       address_rt  : out std_logic_vector(5 downto 0);
-      const_imm   : out std_logic_vector(7 downto 0);
-		);
-	end component;
+      const_imm   : out std_logic_vector(7 downto 0)
+    );
+    end component;
 
-  component control_unit is
-		port(
+  component control_unit_block is 
+    port(
       clock : in std_logic;     --validación de la lectura
       reset : in std_logic;
   
@@ -92,19 +92,39 @@ architecture arch_cpu of cpu is
   
       RDATA : in std_logic_vector(31 downto 0);   --dato leido
       RRESP : in std_logic_vector(1 downto 0);  --respuesta de la lectura
-      RDATAV : in std_logic     --validación de la lectura
-		);
-	end component;
+      RDATAV : in std_logic;     --validación de la lectura
 
-  component bank_register is
-		port(
+      --Banc de registres
+      BankReg_read_not_write : out std_logic;
+      BankReg_input : out std_logic_vector(15 downto 0);
+      BankReg_output : in std_logic_vector(15 downto 0);
+      BankReg_address : out std_logic_vector(3 downto 0);
+
+      --Decoder
+      op_code : in std_logic_vector(3 downto 0);
+      address_rd : in std_logic_vector(5 downto 0);
+      address_rs : in std_logic_vector(5 downto 0);
+      address_rt : in std_logic_vector(5 downto 0);
+      const_imm  : in std_logic_vector(7 downto 0);
+ 
+      --Alu
+      out_alu : in std_logic_vector(15 downto 0);
+
+      --oper registers
+      oper_1 : out std_logic_vector(15 downto 0);
+      oper_2 : out std_logic_vector(15 downto 0)
+    );
+  end component;
+
+  component bankRegister is
+     port(
       reg_in_value      : in std_logic_vector(15 downto 0); --operacion de escritura
       read_not_write    : in std_logic; -- entrada para saber si leemos o escribimos en un register del banco 
       dataOut           : out std_logic_vector(15 downto 0); --lo que irá conectado a los dos registros de los opers
       address_register  : in std_logic_vector(3 downto 0);
       clock             : in std_logic     --validación de la lectura
-		);
-	end component;
+     );
+  end component;
 
   signal oper_1_in : std_logic_vector(15 downto 0);
   signal oper_1_out : std_logic_vector(15 downto 0);
@@ -133,7 +153,7 @@ architecture arch_cpu of cpu is
 
 begin
 
-    oper_1_register : register_block
+    oper_1_register : registerBlock
     generic map(
         data_size => 16
     )
@@ -145,7 +165,7 @@ begin
       data_out => oper_1_out
     );
 
-    oper_2_register : register_block
+    oper_2_register : registerBlock
     generic map(
         data_size => 16
     )
@@ -157,7 +177,7 @@ begin
       data_out => oper_2_out
     );
 
-    alu : alu
+    alu : ALU_block
     port map(
       oper_1 => oper_1_out,
       oper_2 => oper_2_out,
@@ -167,7 +187,7 @@ begin
       out_alu => output_alu
     );
 
-    decoder : decoder
+    decoder : Decoder_Block
     port map(
       instruction => IR_out,
       opCode => op_code,
@@ -177,7 +197,7 @@ begin
       const_imm => constant_data
     );
 
-    instruction_register : register_block
+    instruction_register : registerBlock
     generic map(
         data_size => 32
     )
@@ -186,10 +206,10 @@ begin
       enable => IR_enable,
       clock => clock,
 
-      data_out => IR_out,
+      data_out => IR_out
     );
 
-    bank_register : bank_register
+    bank_register : bankRegister
     port map(
       reg_in_value => bank_register_input,
       read_not_write => bank_register_read_not_write,
@@ -198,7 +218,7 @@ begin
       clock => clock
     );
 
-    control_unit : control_unit
+    control_unit : control_unit_block
     port map(
       clock => clock,
       reset => reset,
@@ -224,7 +244,7 @@ begin
       BankReg_read_not_write => bank_register_read_not_write,
       BankReg_input => bank_register_input,
       BankReg_output => bank_register_output,
-      BankReg_address => address_register,
+      BankReg_address => bank_register_address,
 
       --Decoder
       op_code => op_code,

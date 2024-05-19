@@ -3,20 +3,20 @@ use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
 
-entity decoder is
+entity Decoder_Block is
     Port (
         instruction : in std_logic_vector(31 downto 0); 
         opCode: out std_logic_vector(3 downto 0);
         address_rd: out std_logic_vector(5 downto 0);
         address_rs: out std_logic_vector(5 downto 0);
         address_rt: out std_logic_vector(5 downto 0);
-	clock : in std_logic;
+	    clock : in std_logic;
 	--type_oper: out std_logic_vector(1 downto 0);
         const_imm : out std_logic_vector(7 downto 0)
     );
-end decoder;
+end Decoder_Block;
 
-architecture arch_decoder of decoder is
+architecture arch_decoder of Decoder_Block is
 
 	signal opCode_aux: std_logic_vector(3 downto 0);
 

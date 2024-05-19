@@ -4,7 +4,7 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
-entity control_unit is
+entity control_unit_block is
   port
   (
     clock : in std_logic;     --validación de la lectura
@@ -28,7 +28,7 @@ entity control_unit is
 
     RDATA : in std_logic_vector(31 downto 0);   --dato leido
     RRESP : in std_logic_vector(1 downto 0);  --respuesta de la lectura
-    RDATAV : in std_logic     --validación de la lectura
+    RDATAV : in std_logic;     --validación de la lectura
 
     --Banc de registres
     BankReg_read_not_write : out std_logic;
@@ -41,7 +41,7 @@ entity control_unit is
     address_rd : in std_logic_vector(5 downto 0);
     address_rs : in std_logic_vector(5 downto 0);
     address_rt : in std_logic_vector(5 downto 0);
-    const_imm  : in std_logci_vector(7 downto 0);
+    const_imm  : in std_logic_vector(7 downto 0);
 
     --Alu
     out_alu : in std_logic_vector(15 downto 0);
@@ -50,9 +50,9 @@ entity control_unit is
     oper_1 : out std_logic_vector(15 downto 0);
     oper_2 : out std_logic_vector(15 downto 0)
   );
-end entity control_unit;
+end entity control_unit_block;
 
-architecture arch_control_unit of control_unit is
+architecture arch_control_unit of control_unit_block is
 
   type estadoTipo is (s0, s1, s2, s3, s4, s5, s6, s7, s8, s9, s10);
   signal currentState : estadoTipo;
@@ -60,7 +60,6 @@ architecture arch_control_unit of control_unit is
   signal InstructionReg : std_logic_vector(31 downto 0);
   signal PC : unsigned(5 downto 0) := "000000";
   signal PCaux : unsigned(5 downto 0) := "000000";
-  signal out_alu : std_logic_vector (15 downto 0);
 
 begin
 
