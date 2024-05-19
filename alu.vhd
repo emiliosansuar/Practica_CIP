@@ -7,7 +7,7 @@ entity ALU is
   (
     oper_1      : in std_logic_vector (15 downto 0); -- Primer operando de la ALU
     oper_2      : in std_logic_vector (15 downto 0); -- Segundo operando de la ALU
-    decoder_out : in std_logic_vector (3 downto 0);  -- Señal de control para seleccionar la operación
+    decoder_out : in std_logic_vector (3 downto 0);  -- Entrada de control para seleccionar la operación
     clock       : in std_logic;                      -- Señal de reloj
     out_alu     : out std_logic_vector (15 downto 0) -- Resultado de la operación de la ALU
   );
