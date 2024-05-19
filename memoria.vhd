@@ -6,7 +6,7 @@ use ieee.numeric_std.all;
 entity memoria is
   port
   (
-    clock : in std_logic     --validación de la lectura
+    clock : in std_logic;     --validación de la lectura
 
     --entradas i salidas para escritura
     WADDR : in std_logic_vector(5 downto 0);   --dirección donde escrivir
