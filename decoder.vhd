@@ -10,7 +10,7 @@ entity decoder is
         address_rd: out std_logic_vector(5 downto 0);
         address_rs: out std_logic_vector(5 downto 0);
         address_rt: out std_logic_vector(5 downto 0);
-	type_oper: out std_logic_vector(1 downto 0);
+	--type_oper: out std_logic_vector(1 downto 0);
         const_imm : out std_logic_vector(7 downto 0)
     );
 end decoder;
@@ -30,22 +30,26 @@ architecture arch_decoder of decoder is
                     address_rs  <= instruction(11 downto 6);
                     address_rt  <= instruction(5 downto 0);
                     --const_imm <= (others => '0'); -- Por defecto, se establece a cero
-                    type_oper <= "00"; --RRR
+                    --type_oper <= "00"; --RRR
+		    opCode <= opCode_aux;
 
                 when "0110" | "0111" | "1000" => 
                     address_rd  <= instruction(23 downto 18);
                     address_rs  <= instruction(11 downto 6);
-                    type_oper <= "01"; --RR
+                    --type_oper <= "01"; --RR
+		    opCode <= opCode_aux;
                     
                 when "1100" => 
                     address_rd  <= instruction(23 downto 18);
-                    type_oper <= "10"; --R
+                    --type_oper <= "10"; --R
+		    opCode <= opCode_aux;
                     
                 when "0001" =>
                     address_rd  <= instruction(23 downto 18);
                     address_rs  <= instruction(17 downto 12);
                     const_imm  <= instruction(7 downto 0);
-                    type_oper <= "11"; --RRimm
+                    --type_oper <= "11"; --RRimm
+		    opCode <= opCode_aux;
 
                 when others =>
                     -- En caso de un código de operación no reconocido, puedes realizar alguna acción, como lanzar un error o establecer algún valor predeterminado.
