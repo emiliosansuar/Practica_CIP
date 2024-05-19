@@ -104,8 +104,9 @@ architecture arch_control_unit of control_unit is
     );
 
 
-  process(clock, reset)
-	begin
+begin
+
+  process(clock, reset) begin
       if (reset = '1') then
 			  currentState <= s0;
 		  elsif (rising_edge(clock)) then
