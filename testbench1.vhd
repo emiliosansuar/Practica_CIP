@@ -153,7 +153,7 @@ begin
           nextState <= i0;
 
       end case;
-      wait; --no se si es necesario
+      --wait; --no se si es necesario
     end process;
 
 end arch_testbench1; 
