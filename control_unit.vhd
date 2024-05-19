@@ -30,15 +30,25 @@ entity control_unit is
     RRESP : in std_logic_vector(1 downto 0);  --respuesta de la lectura
     RDATAV : in std_logic     --validación de la lectura
 
-    --BANK REGISTER
-    --read_not_write : out std_logic; -- para saber si leemos o escribimos en un register del banco 
-    --address_register : out std_logic_vector(3 downto 0)
+    --Banc de registres
+    BankReg_read_not_write : out std_logic;
+    BankReg_input : out std_logic_vector(15 downto 0);
+    BankReg_output : in std_logic_vector(15 downto 0);
+    BankReg_address : out std_logic_vector(3 downto 0);
 
-    --ALU
-    --oper_1      : out std_logic_vector (15 downto 0);
-    --oper_2      : out std_logic_vector (15 downto 0)
-    
+    --Decoder
+    op_code : in std_logic_vector(3 downto 0);
+    address_rd : in std_logic_vector(5 downto 0);
+    address_rs : in std_logic_vector(5 downto 0);
+    address_rt : in std_logic_vector(5 downto 0);
+    const_imm  : in std_logci_vector(7 downto 0);
 
+    --Alu
+    out_alu : in std_logic_vector(15 downto 0);
+
+    --oper registers
+    oper_1 : out std_logic_vector(15 downto 0);
+    oper_2 : out std_logic_vector(15 downto 0)
   );
 end entity control_unit;
 

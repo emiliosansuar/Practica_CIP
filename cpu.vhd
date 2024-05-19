@@ -127,8 +127,8 @@ architecture arch_cpu of cpu is
   signal IR_enable : std_logic;
 
   signal bank_register_address : std_logic_vector(3 downto 0);
-  signal bank_register_input : std_logic_vector(3 downto 0);
-  signal bank_register_output : std_logic_vector(3 downto 0);
+  signal bank_register_input : std_logic_vector(15 downto 0);
+  signal bank_register_output : std_logic_vector(15 downto 0);
   signal bank_register_read_not_write : std_logic;
 
 begin
@@ -210,17 +210,36 @@ begin
       WDATA => WDATA,
       WAVALID => WAVALID,
       WDATAV => WDATAV,
-  
       WRESP => WRESP, 
       WRESPV => WRESPV,
   
       --entradas i salidas para lectura
       RADDR => RADDR,
       RAVALID => RAVALID,
-
       RDATA => RDATA,
       RRESP => RRESP,
-      RDATAV => RDATAV
+      RDATAV => RDATAV,
+
+      --Banc de registres
+      BankReg_read_not_write => bank_register_read_not_write,
+      BankReg_input => bank_register_input,
+      BankReg_output => bank_register_output,
+      BankReg_address => address_register,
+
+      --Decoder
+      op_code => op_code,
+      address_rd => rd_address,
+      address_rs => rs_address,
+      address_rt => rt_address,
+      const_imm => constant_data,
+
+      --Alu
+      out_alu => output_alu,
+
+      --oper registers
+      oper_1 => oper_1_in,
+      oper_2 => oper_2_in
+
     );
 
     
