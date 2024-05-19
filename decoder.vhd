@@ -18,45 +18,43 @@ end decoder;
 
 architecture arch_decoder of decoder is
 
-	signal opCode_aux: std_logic_vector(3 downto 0);
+	--signal opCode_aux: std_logic_vector(3 downto 0);
 
-    begin
-        process(instruction)
+begin
+        process(clock)
         begin
 	    if (rising_edge(clock)) then
 		--wait until all rising(instruction); -- Espera a que todos los bits se estabilicen
-            	opCode_aux <= instruction(31 downto 28);
+            	--opCode_aux <= instruction(31 downto 28);
             	--RECORDAR, seaRRR o RR o R. Oper1 es siempre rs y Oper2 es rt
-            	case opCode_aux is
+
+            	case instruction(31 downto 28) is
                 	when "0000" | "0010" | "0011" | "0100" | "0101" | "1001" | "1010" | "1011" | "1101" =>
-                    	address_rd  <= instruction(23 downto 18);
+			opCode <= instruction(31 downto 28); --RRR
+                    	address_rd  <= instruction(23 downto 18); 
                     	address_rs  <= instruction(11 downto 6);
                     	address_rt  <= instruction(5 downto 0);
-                    	--const_imm <= (others => '0'); -- Por defecto, se establece a cero
-                    	--type_oper <= "00"; --RRR
-		    	opCode <= opCode_aux;
+		    	
 
                 	when "0110" | "0111" | "1000" => 
-                    	address_rd  <= instruction(23 downto 18);
+			opCode <= instruction(31 downto 28); --RR
+                    	address_rd  <= instruction(23 downto 18); 
                     	address_rs  <= instruction(11 downto 6);
-                    	--type_oper <= "01"; --RR
-		    	opCode <= opCode_aux;
                     
                 	when "1100" => 
+			opCode <= instruction(31 downto 28); --R
                     	address_rd  <= instruction(23 downto 18);
-                    	--type_oper <= "10"; --R
-		    	opCode <= opCode_aux;
+		    	
                     
                 	when "0001" =>
+			opCode <= instruction(31 downto 28); --RRimm
                     	address_rd  <= instruction(23 downto 18);
                     	address_rs  <= instruction(17 downto 12);
                     	const_imm  <= instruction(7 downto 0);
-                    	--type_oper <= "11"; --RRimm
-		    	opCode <= opCode_aux;
 
                 	when others =>
                     	-- En caso de un código de operación no reconocido, puedes realizar alguna acción, como lanzar un error o establecer algún valor predeterminado.
-                    	null;
+                    	--null;
             	end case;
 
 	    end if; 
