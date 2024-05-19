@@ -10,9 +10,10 @@ entity control_unit is
     clock : in std_logic;     --validación de la lectura
     reset : in std_logic;
 
+
     --MEMORIA
     --entradas i salidas para escritura
-    WADDR : out std_logic_vector(5 downto 0);   --dirección donde escribir
+    WADDR : out std_logic_vector(31 downto 0);   --dirección donde escribir
     WDATA : out std_logic_vector(31 downto 0);   --dato a escribir
     WAVALID : out std_logic;     --validación de la dirección de escritura
     WDATAV : out std_logic;      --validación del dato
@@ -21,7 +22,7 @@ entity control_unit is
     WRESPV : in std_logic;     --validación de la escritura
 
     --entradas i salidas para lectura
-    RADDR : out std_logic_vector(5 downto 0);   --dirección donde leer
+    RADDR : out std_logic_vector(31 downto 0);   --dirección donde leer
     RAVALID : out std_logic;     --validacion de la dirección de lectura
 
     RDATA : in std_logic_vector(31 downto 0);   --dato leido

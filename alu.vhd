@@ -50,13 +50,13 @@ architecture arch_alu of alu is
     generic map(
         data_size => 16
     )
-	port map(
-		data_in => input_register,
-		enable => '1',
-		clock => clock,
+    port map(
+      data_in => input_register,
+      enable => '1',
+      clock => clock,
 
-		data_out => out_alu
-	);
+      data_out => out_alu
+    );
 
     Add_op <= std_logic_vector(signed(oper_1) + signed(oper_2));         --Add y Add Immediate
     
