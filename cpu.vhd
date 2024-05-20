@@ -56,7 +56,7 @@ architecture arch_cpu of cpu is
 
       out_alu     : out std_logic_vector (15 downto 0)
     );
-    end component;
+  end component;
 
   component Decoder_Block is
     port(
@@ -67,7 +67,7 @@ architecture arch_cpu of cpu is
       address_rt  : out std_logic_vector(5 downto 0);
       const_imm   : out std_logic_vector(7 downto 0)
     );
-    end component;
+  end component;
 
   component control_unit_block is 
     port(
@@ -112,7 +112,17 @@ architecture arch_cpu of cpu is
 
       --oper registers
       oper_1 : out std_logic_vector(15 downto 0);
-      oper_2 : out std_logic_vector(15 downto 0)
+      oper_1_enable : out std_logic;
+      oper_2 : out std_logic_vector(15 downto 0);
+      oper_2_enable : out std_logic;
+
+      --instructuin register
+      Enable_Instruction_Reg : out std_logic;
+
+      --Buffer register
+      Buffer_in : out std_logic_vector(15 downto 0);
+      Buffer_enable : out std_logic;
+      Buffer_out : in std_logic_vector(15 downto 0)
     );
   end component;
 
@@ -127,9 +137,11 @@ architecture arch_cpu of cpu is
   end component;
 
   signal oper_1_in : std_logic_vector(15 downto 0);
+  signal oper_1_enable : std_logic;
   signal oper_1_out : std_logic_vector(15 downto 0);
 
   signal oper_2_in : std_logic_vector(15 downto 0);
+  signal oper_2_enable : std_logic;
   signal oper_2_out : std_logic_vector(15 downto 0);
 
   signal output_alu : std_logic_vector(15 downto 0);
@@ -151,6 +163,10 @@ architecture arch_cpu of cpu is
   signal bank_register_output : std_logic_vector(15 downto 0);
   signal bank_register_read_not_write : std_logic;
 
+  signal Buffer_in : std_logic_vector(31 downto 0);
+  signal Buffer_out : std_logic_vector(31 downto 0);
+  signal Buffer_enable : std_logic;
+
 begin
 
     oper_1_register : registerBlock
@@ -159,7 +175,7 @@ begin
     )
     port map(
       data_in => oper_1_in,
-      enable => '1',
+      enable => oper_1_enable,
       clock => clock,
 
       data_out => oper_1_out
@@ -171,7 +187,7 @@ begin
     )
     port map(
       data_in => oper_2_in,
-      enable => '1',
+      enable => oper_2_enable,
       clock => clock,
 
       data_out => oper_2_out
@@ -258,8 +274,29 @@ begin
 
       --oper registers
       oper_1 => oper_1_in,
-      oper_2 => oper_2_in
+      oper_1_enable => oper_1_enable,
+      oper_2 => oper_2_in,
+      oper_2_enable => oper_2_enable,
 
+      --instructuin register
+      Enable_Instruction_Reg => IR_enable,
+
+      --Buffer register
+      Buffer_in => Buffer_in,
+      Buffer_enable => Buffer_enable,
+      Buffer_out => Buffer_out
+    );
+
+    buffer_register : registerBlock
+    generic map(
+        data_size => 16
+    )
+    port map(
+      data_in => Buffer_in,
+      enable => Buffer_enable,
+      clock => clock,
+
+      data_out => Buffer_out
     );
 
     
