@@ -69,7 +69,7 @@ architecture arch_control_unit of control_unit_block is
   signal currentState : estadoTipo;
   signal nextState : estadoTipo;
 
-  signal PC : unsigned(5 downto 0) := "000000";
+  signal PC : std_logic_vector(5 downto 0) := "000000";
 
 begin
 
@@ -108,7 +108,7 @@ begin
 
           Enable_Instruction_reg <= '0';
 
-          Buffer_in <= '0000000000000000';
+          Buffer_in <= "0000000000000000";
           Buffer_enable <= '0';
 
           if (init_enable = '1') then
@@ -119,8 +119,8 @@ begin
 
         when s1 =>
           RADDR <= PC;
-          PAVALID <= '1';
-          Enable_Intruction_Reg <= '1';
+          RAVALID <= '1';
+          Enable_Instruction_Reg <= '1';
           BankReg_reset <= '0';
 
           if ((RDATAV = '1') and (RRESP = "00")) then
@@ -133,12 +133,12 @@ begin
           currentState <= s3;
           
         when s3 =>
-          Enable_Intrusction_Reg <= '0';
+          Enable_Instruction_Reg <= '0';
           RAVALID <= '0';
 
           currentState <= s4;
         when s4 =>
-          PC <= PC + 1;
+          PC <= std_logic_vector(to_signed(to_integer(signed(PC)) + 1, 32));
           currentState <= s5;
 
         when s5 =>
