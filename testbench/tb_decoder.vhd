@@ -7,7 +7,7 @@ end tb_decoder;
 
 architecture arch_tb_decoder of tb_decoder is
     -- Componente
-    component decoder
+    component Decoder_Block
         port (
             instruction : in std_logic_vector(31 downto 0);
             opCode : out std_logic_vector(3 downto 0);
@@ -30,7 +30,7 @@ architecture arch_tb_decoder of tb_decoder is
 
 begin
     
-    DUT : decoder
+    DUT : Decoder_Block
         port map (
             instruction => instruction_tb,
             opCode => opCode_tb,
