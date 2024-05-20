@@ -184,44 +184,110 @@ begin
           currentState <= s10;
 
         when s10 =>
-          if (op_code = "1100" or) then
-
-          elsif () then
-
+          if (op_code = "1100" or (op_code = "1101" and out_alu = "0000000000000001")) then
+            currentState <= s14;
+          elsif (op_code = "1101" and out_alu = "0000000000000000") then
+            currentState <= s16;
           else
-            
+            currentState <= s11;
           end if;
 
         when s11 =>
+          BankReg_input <= out_alu;
+          Bankreg_read_not_write <= '0';
+          BankReg_address = address_rd;
+          
+          currentState <= s12;
 
         when s12 =>
+          currentState <= s13;
 
         when s13 =>
+          BankReg_read_not_write <= '1';
+
+          currentState <= s1;
 
         when s14 =>
+          BankReg_address <= address_rd;
+          BankReg_read_not_write <= '1';
+
+          currentState <= s15;
 
         when s15 =>
+          PC <= BankReg_output;
+
+          currentState <= s1;
 
         when s16 =>
+          currentState <= s1;
 
         when s17 =>
+          oper_1_enable <= '0';
+          oper_2_enable <= '0';
+          
+          currentState <= s18;
 
         when s18 =>
+          oper_2 <= const_imm;
+
+          currentState <= s9;
 
         when s19 =>
+          Buffer_in <= BankReg_output;
+          oper_1_enable <= '0';
+          oper_2_enable <= '0';
+
+          currentState <= s20;
 
         when s20 =>
+          Buffer_enable <= '0';
+          BankReg_address <= address_rd;
+
+          if (op_code = "0111") then
+            currentState <= s21:
+          else
+            currentState <= s24;
+          end if;
 
         when s21 =>
+          RADDR <= Buffer_out;
+          RAVALID <= '1';
+          BankReg_read_not_write <= '0';
+
+          if (RDATAV = '1') then
+            currentState <= s22;
+          else
+            currentState <= s21;
+          end if;
 
         when s22 =>
+          BankReg_input <= RDATA;
+
+          currentState <= s23;
 
         when s23 =>
+          BankReg_read_not_write <= '1';
+          RAVALID <= '0';
+
+          currentState <= s1;
 
         when s24 =>
+          WADDR <= address_rd;
+          WDATA <= Buffer_out;
+          WAVALID <= '1';
+          WDATAV <= '1';
+
+          if(WRESPV = '1') then
+            currentState <= s25;
+          else
+            curretnState <= s24;
+          end if;
 
         when s25 =>
+          WAVALID <= '0';
+          WDATAV <= '0';
 
+          currentState <= s1;
 
         when others =>
           nextstate <= s0;
