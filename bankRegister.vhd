@@ -8,7 +8,8 @@ entity bankRegister is
         read_not_write : in std_logic;                      -- Entrada que determinará si es una operación de lectura o escritura (read = 1 / write = 0)
         dataOut : out std_logic_vector(15 downto 0);        -- Salida de datos
         address_register : in std_logic_vector(3 downto 0); -- Dirección del registro a leer o escribir
-        clock : in std_logic                                -- Reloj
+        clock : in std_logic;                                -- Reloj
+        reset : in std_logic
     );
 end bankRegister;
 
@@ -21,19 +22,22 @@ architecture arch_bankRegister of bankRegister is
     );
    
 begin
-    seq_comb_state : process(clock)
+
+    seq_comb_state : process(clock, reset)
     begin
-	-- Comprobaremos si hay flanco de subida en la señal de reloj
-        if (rising_edge(clock)) then  
-	    -- Comprobamos si queremos hacer una lectura o escritura. En este caso, si valor 1 significa que haremos la lectura
+        -- Comprobaremos si el reset está activo
+        if reset = '1' then
+            registers <= (others => (others => '0')); -- Reset todos los registros a cero
+        elsif rising_edge(clock) then
+            -- Comprobamos si queremos hacer una lectura o escritura.
             if read_not_write = '1' then 
                 -- Leemos el valor del registro en la dirección indicada y lo asignamos a la salida
-                dataOut <= registers(to_integer(unsigned (address_register)));
-	    -- En este caso, si valor 0 significa que haremos la escritura
+                dataOut <= registers(to_integer(unsigned(address_register)));
             elsif read_not_write = '0' then 
-                -- Escribimps el valor introducido en el registro en la dirección indicada
-                registers(to_integer(unsigned (address_register))) <= reg_in_value;
+                -- Escribimos el valor introducido en el registro en la dirección indicada
+                registers(to_integer(unsigned(address_register))) <= reg_in_value;
             end if;
         end if;
     end process;
+
 end arch_bankRegister;

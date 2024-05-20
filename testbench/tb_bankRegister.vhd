@@ -11,6 +11,7 @@ architecture tb_arch of tb_bankRegister is
     signal dataOut_tb : std_logic_vector(15 downto 0);
     signal address_register_tb : std_logic_vector(3 downto 0);
     signal clock_tb : std_logic := '0';
+    signal reset_tb : std_logic := '0';
 
     component bankRegister
         port(
@@ -18,7 +19,8 @@ architecture tb_arch of tb_bankRegister is
             read_not_write : in std_logic;
             dataOut : out std_logic_vector(15 downto 0);
             address_register : in std_logic_vector(3 downto 0);
-            clock : in std_logic
+            clock : in std_logic;
+            reset : in std_logic
         );
     end component;
 
@@ -29,7 +31,8 @@ begin
             read_not_write => read_not_write_tb,
             dataOut => dataOut_tb,
             address_register => address_register_tb,
-            clock => clock_tb
+            clock => clock_tb,
+            reset => reset_tb
         );
 
      -- Generamos una señal de reloj clock que cambia de estado de alto a bajo y viceversa cada 5 ns.  
@@ -70,6 +73,10 @@ begin
         -- Read from register 0
         address_register_tb <= "0000";
         read_not_write_tb <= '1';
+        wait for 10 ns;
+
+        -- Reset all the registers
+        reset_tb <= '1';
         wait for 10 ns;
         
         wait;
