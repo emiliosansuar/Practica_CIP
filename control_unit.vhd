@@ -67,24 +67,19 @@ architecture arch_control_unit of control_unit_block is
 
   type estadoTipo is (s0, s1, s2, s3, s4, s5, s6, s7, s8, s9, s10, s11, s12, s13, s14, s15, s16, s17, s18, s19, s20, s21, s22, s23, s24, s25);
   signal currentState : estadoTipo;
-  signal nextState : estadoTipo;
 
   signal PC : std_logic_vector(5 downto 0) := "000000";
 
 begin
 
-  process(clock, reset) 
-  begin
-    if (reset = '1') then
-        currentState <= s0;
-    elsif (rising_edge(clock)) then
-	currentState <= nextState;
-    end if;
-  end process;
-
-  process(currentState)
+  process(clock, reset)
 
     begin
+
+      if (reset = '1') then
+        currentState <= s0;
+
+      elsif (rising_edge(clock)) then
       case currentState is
         when s0 =>
           PC <= "000000";
@@ -113,9 +108,9 @@ begin
           Buffer_enable <= '0';
 
           if (init_enable = '1') then
-            nextState <= S1;
+            currentState <= S1;
           else
-            nextState <= s0;
+            currentState <= s0;
           end if;
 
         when s1 =>
@@ -125,33 +120,37 @@ begin
           BankReg_reset <= '0';
 
           if ((RDATAV = '1') and (RRESP = "00")) then
-            nextState <= s2;
+            currentState <= s2;
           else
-            nextState <= s1;
+            currentState <= s1;
           end if;
          
         when s2 =>
-          nextState <= s3;
+          currentState <= s3;
           
         when s3 =>
           Enable_Instruction_Reg <= '0';
           RAVALID <= '0';
 
-          nextState <= s4;
+          currentState <= s4;
         when s4 =>
           PC <= std_logic_vector(to_signed(to_integer(signed(PC)) + 1, 6));
-          nextState <= s5;
-
-        when s5 =>
           BankReg_address <= address_rs(3 downto 0);
           Oper_1_enable <= '1';
           Oper_2_enable <= '1';
           Buffer_enable <= '1';
+          currentState <= s5;
+
+        when s5 =>
+          --BankReg_address <= address_rs(3 downto 0);
+          --Oper_1_enable <= '1';
+          --Oper_2_enable <= '1';
+          --Buffer_enable <= '1';
           
           if(op_code = "1000" or op_code = "0111") then
-            nextState <= s19;
+            currentState <= s19;
           else
-            nextState <= s6;
+            currentState <= s6;
           end if;
 
         when s6 =>
@@ -159,38 +158,41 @@ begin
           Buffer_enable <= '0';
 
           if(op_code = "0001") then
-            nextState <= s17;
+            currentState <= s17;
           elsif (op_code = "0110") then
-            nextState <= s9;
+            currentState <= s9;
           else
-            nextState <= s7;
+            currentState <= s7;
+            BankReg_address <= address_rt(3 downto 0);
+            oper_1_enable <= '0';
+            oper_2_enable <= '1';
           end if;
 
         when s7 =>
-          BankReg_address <= address_rt(3 downto 0);
-          oper_1_enable <= '0';
-          oper_2_enable <= '1';
+          --BankReg_address <= address_rt(3 downto 0);
+          --oper_1_enable <= '0';
+          --oper_2_enable <= '1';
 
-          nextState <= s8;
-
-        when s8 =>
+          currentState <= s8;
           oper_2 <= BankReg_output;
+        when s8 =>
+          --oper_2 <= BankReg_output;
 
-          nextState <= s9;
+          currentState <= s9;
         
         when s9 =>
           oper_1_enable <= '0';
           oper_2_enable <= '0';
 
-          nextState <= s10;
+          currentState <= s10;
 
         when s10 =>
           if (op_code = "1100" or (op_code = "1101" and out_alu = "0000000000000001")) then
-            nextState <= s14;
+            currentState <= s14;
           elsif (op_code = "1101" and out_alu = "0000000000000000") then
-            nextState <= s16;
+            currentState <= s16;
           else
-            nextState <= s11;
+            currentState <= s11;
           end if;
 
         when s11 =>
@@ -198,56 +200,56 @@ begin
           Bankreg_read_not_write <= '0';
           BankReg_address <= address_rd(3 downto 0);
           
-          nextState <= s12;
+          currentState <= s12;
 
         when s12 =>
-          nextState <= s13;
+          currentState <= s13;
 
         when s13 =>
           BankReg_read_not_write <= '1';
 
-          nextState <= s1;
+          currentState <= s1;
 
         when s14 =>
           BankReg_address <= address_rd(3 downto 0);
           BankReg_read_not_write <= '1';
 
-          nextState <= s15;
+          currentState <= s15;
 
         when s15 =>
           PC <= BankReg_output(5 downto 0);
 
-          nextState <= s1;
+          currentState <= s1;
 
         when s16 =>
-          nextState <= s1;
+          currentState <= s1;
 
         when s17 =>
           oper_1_enable <= '0';
-          oper_2_enable <= '0';
+          oper_2_enable <= '1';
           
-          nextState <= s18;
+          currentState <= s18;
 
         when s18 =>
           oper_2 <= std_logic_vector(resize(signed(const_imm), oper_2'length));
 
-          nextState <= s9;
+          currentState <= s9;
 
         when s19 =>
           Buffer_in <= BankReg_output;
           oper_1_enable <= '0';
           oper_2_enable <= '0';
 
-          nextState <= s20;
+          currentState <= s20;
 
         when s20 =>
           Buffer_enable <= '0';
           BankReg_address <= address_rd(3 downto 0);
 
           if (op_code = "0111") then
-            nextState <= s21;
+            currentState <= s21;
           else
-            nextState <= s24;
+            currentState <= s24;
           end if;
 
         when s21 =>
@@ -256,21 +258,21 @@ begin
           BankReg_read_not_write <= '0';
 
           if (RDATAV = '1') then
-            nextState <= s22;
+            currentState <= s22;
           else
-            nextState <= s21;
+            currentState <= s21;
           end if;
 
         when s22 =>
           BankReg_input <= RDATA(15 downto 0);
 
-          nextState <= s23;
+          currentState <= s23;
 
         when s23 =>
           BankReg_read_not_write <= '1';
           RAVALID <= '0';
 
-          nextState <= s1;
+          currentState <= s1;
 
         when s24 =>
           WADDR <= std_logic_vector(resize(signed(address_rd), WADDR'length));
@@ -279,20 +281,22 @@ begin
           WDATAV <= '1';
 
           if(WRESPV = '1') then
-            nextState <= s25;
+            currentState <= s25;
           else
-            nextState <= s24;
+            currentState <= s24;
           end if;
 
         when s25 =>
           WAVALID <= '0';
           WDATAV <= '0';
 
-          nextState <= s1;
+          currentState <= s1;
 
         when others =>
-          nextState <= s0;
+          currentState <= s0;
 
       end case;
+
+    end if;
   end process;
 end arch_control_unit; 

@@ -65,6 +65,7 @@ architecture arch_cpu of cpu is
       address_rd  : out std_logic_vector(5 downto 0);
       address_rs  : out std_logic_vector(5 downto 0);
       address_rt  : out std_logic_vector(5 downto 0);
+      clock : in std_logic;
       const_imm   : out std_logic_vector(7 downto 0)
     );
   end component;
@@ -132,6 +133,7 @@ architecture arch_cpu of cpu is
       read_not_write    : in std_logic; -- entrada para saber si leemos o escribimos en un register del banco 
       dataOut           : out std_logic_vector(15 downto 0); --lo que irá conectado a los dos registros de los opers
       address_register  : in std_logic_vector(3 downto 0);
+      reset : in std_logic;
       clock             : in std_logic     --validación de la lectura
      );
   end component;
@@ -163,8 +165,8 @@ architecture arch_cpu of cpu is
   signal bank_register_output : std_logic_vector(15 downto 0);
   signal bank_register_read_not_write : std_logic;
 
-  signal Buffer_in : std_logic_vector(31 downto 0);
-  signal Buffer_out : std_logic_vector(31 downto 0);
+  signal Buffer_in : std_logic_vector(15 downto 0);
+  signal Buffer_out : std_logic_vector(15 downto 0);
   signal Buffer_enable : std_logic;
 
 begin
@@ -210,6 +212,7 @@ begin
       address_rd => rd_address,
       address_rs => rs_address,
       address_rt => rt_address,
+      clock => clock,
       const_imm => constant_data
     );
 
@@ -218,7 +221,7 @@ begin
         data_size => 32
     )
     port map(
-      data_in => IR_in,
+      data_in => RDATA,
       enable => IR_enable,
       clock => clock,
 
@@ -231,6 +234,7 @@ begin
       read_not_write => bank_register_read_not_write,
       dataOut => bank_register_output,
       address_register => bank_register_address,
+      reset => reset,
       clock => clock
     );
 

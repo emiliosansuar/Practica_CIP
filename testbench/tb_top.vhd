@@ -122,7 +122,7 @@ begin
         --------------------------------------------------------------------------------------
 
         WADDR_init_tb <= "00000000000000000000000000000010";
-        WDATA_init_tb <= "00000000000011000000000001000010";
+        WDATA_init_tb <= "00000000000011000000000010000001";
         wait for 10 ns;
 
         WAVALID_init_tb <= '1';
@@ -147,7 +147,7 @@ end architecture;
 -- rs = x // rt = y // rd = z // constat = C
     --  
     -- "00000000zzzzzz000000yyyyyyxxxxxx" -> ADD operation                RRR
-    -- "00010000zzzzzzxxxxxx0000CCCCCCCC" -> ADD inmediate operation      RRImm
+    -- "00010000zzzzzzxxxxxx0000CCCCCCCC" -> ADD inmediate operation      RRImm   ++++
     -- "00100000zzzzzz000000yyyyyyxxxxxx" -> Substract operation          RRR
     -- "00110000zzzzzz000000yyyyyyxxxxxx" -> Or operation                 RRR
     -- "01000000zzzzzz000000yyyyyyxxxxxx" -> Xor operation                RRR

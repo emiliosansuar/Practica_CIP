@@ -10,7 +10,7 @@ entity Decoder_Block is
         address_rd: out std_logic_vector(5 downto 0);
         address_rs: out std_logic_vector(5 downto 0);
         address_rt: out std_logic_vector(5 downto 0);
-	    clock : in std_logic;
+	clock : in std_logic;
 	--type_oper: out std_logic_vector(1 downto 0);
         const_imm : out std_logic_vector(7 downto 0)
     );

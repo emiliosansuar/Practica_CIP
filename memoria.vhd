@@ -61,7 +61,7 @@ begin
       -- Y los datos de escritura son válidos
       if (data_write_ok = '1') then
         -- Escribimos el dato en la dirección especificada 
-        memory(to_integer(signed(WADDR))) <=  WDATA;
+        memory(to_integer(unsigned(WADDR))) <=  WDATA;
     
         -- Respuesta de escritura correcta
         WRESP <=  "00";
@@ -86,7 +86,7 @@ begin
       -- Y la dirección de lectura es válida
       if (data_read_ok = '1') then
         -- Leemos el dato de la dirección especificada
-        RDATA <= memory(to_integer(signed(RADDR)));
+        RDATA <= memory(to_integer(unsigned(RADDR)));
     
         -- Respuesta de lectura correcta
         RRESP <=  "00";
