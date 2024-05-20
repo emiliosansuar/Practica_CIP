@@ -34,16 +34,22 @@ begin
                     	address_rd  <= instruction(23 downto 18); 
                     	address_rs  <= instruction(11 downto 6);
                     	address_rt  <= instruction(5 downto 0);
+						const_imm   <= (others => '0');
 		    	
 
                 	when "0110" | "0111" | "1000" => 
 			opCode <= instruction(31 downto 28); --RR
                     	address_rd  <= instruction(23 downto 18); 
                     	address_rs  <= instruction(11 downto 6);
+						address_rt  <= (others => '0');
+						const_imm   <= (others => '0');
                     
                 	when "1100" => 
 			opCode <= instruction(31 downto 28); --R
                     	address_rd  <= instruction(23 downto 18);
+						address_rs  <= (others => '0');
+						address_rt  <= (others => '0');
+						const_imm   <= (others => '0');
 		    	
                     
                 	when "0001" =>
@@ -51,6 +57,7 @@ begin
                     	address_rd  <= instruction(23 downto 18);
                     	address_rs  <= instruction(17 downto 12);
                     	const_imm  <= instruction(7 downto 0);
+						address_rt  <= (others => '0');
 
                 	when others =>
                     	-- En caso de un código de operación no reconocido, puedes realizar alguna acción, como lanzar un error o establecer algún valor predeterminado.
