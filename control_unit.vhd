@@ -65,7 +65,7 @@ end entity control_unit_block;
 
 architecture arch_control_unit of control_unit_block is
 
-  type estadoTipo is (s0, s1, s2, s3, s4, s5, s6, s7, s8, s9, s10, s11, s12, s13, s14, s15, s16, s17, s18, s19, s20, s21, s22, s23, s24, s25);
+  type estadoTipo is (s0, s1, s2, s3, s4, s5, s6, s7, s8, s9, s10, s11, s12, s13, s14, s15, s16, s17, s18, s19, s20, s21, s22, s23, s24, s25, s26, s27);
   signal currentState : estadoTipo;
 
   signal PC : std_logic_vector(5 downto 0) := "000000";
@@ -136,16 +136,13 @@ begin
         when s4 =>
           PC <= std_logic_vector(to_signed(to_integer(signed(PC)) + 1, 6));
           BankReg_address <= address_rs(3 downto 0);
-          Oper_1_enable <= '1';
-          Oper_2_enable <= '1';
-          Buffer_enable <= '1';
           currentState <= s5;
 
         when s5 =>
           --BankReg_address <= address_rs(3 downto 0);
-          --Oper_1_enable <= '1';
-          --Oper_2_enable <= '1';
-          --Buffer_enable <= '1';
+          Oper_1_enable <= '1';
+          Oper_2_enable <= '1';
+          Buffer_enable <= '1';
           
           if(op_code = "1000" or op_code = "0111") then
             currentState <= s19;
@@ -157,28 +154,18 @@ begin
           oper_1 <= BankReg_output;
           Buffer_enable <= '0';
 
-          if(op_code = "0001") then
-            currentState <= s17;
-          elsif (op_code = "0110") then
-            currentState <= s9;
-          else
-            currentState <= s7;
-            BankReg_address <= address_rt(3 downto 0);
-            oper_1_enable <= '0';
-            oper_2_enable <= '1';
-          end if;
+          currentState <= s26;
 
         when s7 =>
           --BankReg_address <= address_rt(3 downto 0);
-          --oper_1_enable <= '0';
-          --oper_2_enable <= '1';
+          oper_1_enable <= '0';
+          oper_2_enable <= '1';
 
           currentState <= s8;
-          oper_2 <= BankReg_output;
         when s8 =>
-          --oper_2 <= BankReg_output;
+          oper_2 <= BankReg_output;
 
-          currentState <= s9;
+          currentState <= s27;
         
         when s9 =>
           oper_1_enable <= '0';
@@ -291,6 +278,19 @@ begin
           WDATAV <= '0';
 
           currentState <= s1;
+
+        when s26 =>
+          if(op_code = "0001") then
+            currentState <= s17;
+          elsif (op_code = "0110") then
+            currentState <= s9;
+          else
+            BankReg_address <= address_rt(3 downto 0);
+            currentState <= s7;
+          end if;
+
+        when s27 => 
+          currentState <= s9;
 
         when others =>
           currentState <= s0;

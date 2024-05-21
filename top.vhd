@@ -3,160 +3,170 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
+entity top is
+    port(
+        clock_top           : in std_logic;
+        reset_top           : in std_logic;
+        Run_mode  : in std_logic; -- init = 0 / execute = 1
 
-entity tb_top is
-end entity;
+        WADDR_init : in std_logic_vector(31 downto 0);   --dirección donde escribir
+        WDATA_init : in std_logic_vector(31 downto 0);   --dato a escribir
+        WAVALID_init : in std_logic;     --validación de la dirección de escritura
+        WDATAV_init : in std_logic;      --validación del dato
 
-
-architecture arch1 of tb_top is
-
-    component top is
-        port(
-            clock_top           : in std_logic;
-            reset_top           : in std_logic;
-            Run_mode  : in std_logic; -- init = 0 / execute = 1
-
-            WADDR_init : in std_logic_vector(31 downto 0);   --dirección donde escribir
-            WDATA_init : in std_logic_vector(31 downto 0);   --dato a escribir
-            WAVALID_init : in std_logic;     --validación de la dirección de escritura
-            WDATAV_init : in std_logic;      --validación del dato
-
-            WRESP_init : out std_logic_vector(1 downto 0);  --respuesta de la escritura
-            WRESPV_init : out std_logic
-        );
-
-    end component;
-
-    signal clock_top_tb    : std_logic := '0';
-    signal reset_top_tb    : std_logic;
-    signal Run_mode_tb     : std_logic; -- init = 0 / execute = 1
-
-    signal WADDR_init_tb   : std_logic_vector(31 downto 0);   --dirección donde escribir
-    signal WDATA_init_tb   : std_logic_vector(31 downto 0);   --dato a escribir
-    signal WAVALID_init_tb : std_logic;     --validación de la dirección de escritura
-    signal WDATAV_init_tb  : std_logic;      --validación del dato
-
-    signal WRESP_init_tb   : std_logic_vector(1 downto 0);  --respuesta de la escritura
-    signal WRESPV_init_tb  : std_logic;
-
-begin
-
-    top_block : top
-    port map(
-        clock_top => clock_top_tb,
-        reset_top => reset_top_tb,
-        Run_mode  => Run_mode_tb,
-
-        WADDR_init => WADDR_init_tb,
-        WDATA_init => WDATA_init_tb,
-        WAVALID_init => WAVALID_init_tb,
-        WDATAV_init => WDATAV_init_tb,
-
-        WRESP_init => WRESP_init_tb,
-        WRESPV_init => WRESPV_init_tb
+        WRESP_init : out std_logic_vector(1 downto 0);  --respuesta de la escritura
+        WRESPV_init : out std_logic
     );
 
-    clock_top_tb <= not clock_top_tb after 5 ns;
+end entity;
 
-    process
-    begin
-        Run_mode_tb <= '0';
-        reset_top_tb <= '1';
-	WAVALID_init_tb <= '0';
-        WDATAV_init_tb <= '0';
+architecture top_arch of top is
+    
+    component cpu is
 
-        wait for 20 ns;
-
-        WADDR_init_tb <= "00000000000000000000000000100000";
-        WDATA_init_tb <= "00000000000000000000000000001001"; --8
-        wait for 10 ns;
-
-        WAVALID_init_tb <= '1';
-        WDATAV_init_tb <= '1';
-        wait for 20 ns;
-
-        WAVALID_init_tb <= '0';
-        WDATAV_init_tb <= '0';
-        wait for 10 ns;
-        --------------------------------------------------------------------------------------
-        --------------------------------------------------------------------------------------
-
-        WADDR_init_tb <= "00000000000000000000000000100001";
-        WDATA_init_tb <= "00000000000000000000000000001010";--10
-        wait for 10 ns;
-
-        WAVALID_init_tb <= '1';
-        WDATAV_init_tb <= '1';
-        wait for 20 ns;
-
-        WAVALID_init_tb <= '0';
-        WDATAV_init_tb <= '0';
-        wait for 10 ns;
-        --------------------------------------------------------------------------------------
-        --------------------------------------------------------------------------------------
-        WADDR_init_tb <= "00000000000000000000000000000000";
-        WDATA_init_tb <= "00010000000001000001000000100000";
-        wait for 10 ns;
-
-        WAVALID_init_tb <= '1';
-        WDATAV_init_tb <= '1';
-        wait for 20 ns;
-
-        WAVALID_init_tb <= '0';
-        WDATAV_init_tb <= '0';
-        wait for 10 ns;
-        --------------------------------------------------------------------------------------
-        --------------------------------------------------------------------------------------
-        WADDR_init_tb <= "00000000000000000000000000000001";
-        WDATA_init_tb <= "00010000000010000010000000100001";
-        wait for 10 ns;
-
-        WAVALID_init_tb <= '1';
-        WDATAV_init_tb <= '1';
-        wait for 20 ns;
-
-        WAVALID_init_tb <= '0';
-        WDATAV_init_tb <= '0';
-        wait for 10 ns;
-        --------------------------------------------------------------------------------------
-        --------------------------------------------------------------------------------------
-
-        WADDR_init_tb <= "00000000000000000000000000000010";
-        WDATA_init_tb <= "00000000000011000000000001000010";
-        wait for 10 ns;
-
-        WAVALID_init_tb <= '1';
-        WDATAV_init_tb <= '1';
-        wait for 20 ns;
-
-        WAVALID_init_tb <= '0';
-        WDATAV_init_tb <= '0';
-        wait for 10 ns;
-        --------------------------------------------------------------------------------------
-        --------------------------------------------------------------------------------------
+        port(
+            clock : in std_logic;     --validación de la lectura
+            reset : in std_logic;
+            init_enable  : in std_logic;
+            
+            --MEMORIA
+            --entradas i salidas para escritura
+            WADDR : out std_logic_vector(31 downto 0);   --dirección donde escribir
+            WDATA : out std_logic_vector(31 downto 0);   --dato a escribir
+            WAVALID : out std_logic;     --validación de la dirección de escritura
+            WDATAV : out std_logic;      --validación del dato
         
+            WRESP : in std_logic_vector(1 downto 0);  --respuesta de la escritura
+            WRESPV : in std_logic;     --validación de la escritura
+        
+            --entradas i salidas para lectura
+            RADDR : out std_logic_vector(31 downto 0);   --dirección donde leer
+            RAVALID : out std_logic;     --validacion de la dirección de lectura
+        
+            RDATA : in std_logic_vector(31 downto 0);   --dato leido
+            RRESP : in std_logic_vector(1 downto 0);  --respuesta de la lectura
+            RDATAV : in std_logic     --validación de la lectura
+        );
+    end component;
 
-        Run_mode_tb <= '1';
-        reset_top_tb <= '0';
-        wait for 30 ns;
-        wait;
-    end process;
+    component memoria is
+        port
+        (
+            clock : in std_logic;     --validación de la lectura
+
+            --entradas i salidas para escritura
+            WADDR : in std_logic_vector(5 downto 0);   --dirección donde escrivir
+            WDATA : in std_logic_vector(31 downto 0);   --dato a escrivir
+            WAVALID : in std_logic;     --validacion de la dirección de escritura
+            WDATAV : in std_logic;      --validacion del dato
+
+            WRESP : out std_logic_vector(1 downto 0);  --respuesta de la escritura
+            WRESPV : out std_logic;     --validación de la escritura
+
+            --entradas i salidas para lectura
+            RADDR : in std_logic_vector(5 downto 0);   --dirección donde leer
+            RAVALID : in std_logic;     --validacion de la dirección de lectura
+
+            RDATA : out std_logic_vector(31 downto 0);   --dato leido
+            RRESP : out std_logic_vector(1 downto 0);  --respuesta de la lectura
+            RDATAV : out std_logic     --validación de la lectura
+        );
+    end component;
+
+    signal WADDR_cpu   : std_logic_vector(31 downto 0);
+    signal WDATA_cpu   : std_logic_vector(31 downto 0);
+    signal WAVALID_cpu : std_logic;
+    signal WDATAV_cpu  : std_logic;
+
+    signal WRESP_cpu   : std_logic_vector(1 downto 0);
+    signal WRESPV_cpu  : std_logic;
+
+    signal RADDR_cpu   : std_logic_vector(31 downto 0);   --dirección donde leer
+    signal RAVALID_cpu : std_logic;     --validacion de la dirección de lectura
+
+    signal RDATA_cpu   : std_logic_vector(31 downto 0);   --dato leido
+    signal RRESP_cpu   : std_logic_vector(1 downto 0);  --respuesta de la lectura
+    signal RDATAV_cpu  : std_logic;
+
+    signal WADDR_mux   : std_logic_vector(31 downto 0);
+    signal WDATA_mux   : std_logic_vector(31 downto 0);
+    signal WAVALID_mux : std_logic;
+    signal WDATAV_mux  : std_logic;
+
+    signal WRESP_mux   : std_logic_vector(1 downto 0);
+    signal WRESPV_mux  : std_logic;
+
+begin
+    
+    bloque_cpu : cpu
+    port map(
+        clock => clock_top,
+        reset => reset_top,
+        init_enable => Run_mode,
+
+        --entradas i salidas para escritura
+        WADDR => WADDR_cpu,
+        WDATA => WDATA_cpu,
+        WAVALID => WAVALID_cpu,
+        WDATAV => WDATAV_cpu,
+    
+        WRESP => WRESP_cpu,
+        WRESPV => WRESPV_cpu,
+    
+        --entradas i salidas para lectura
+        RADDR => RADDR_cpu,
+        RAVALID => RAVALID_cpu,
+    
+        RDATA => RDATA_cpu,
+        RRESP => RRESP_cpu,
+        RDATAV => RDATAV_cpu
+    );
+
+    bloque_memoria : memoria
+    port map(
+        clock => clock_top,
+
+        --entradas i salidas para escritura
+        WADDR => WADDR_mux(5 downto 0),
+        WDATA => WDATA_mux,
+        WAVALID => WAVALID_mux,
+        WDATAV => WDATAV_mux,
+    
+        WRESP => WRESP_mux,
+        WRESPV => WRESPV_mux,
+    
+        --entradas i salidas para lectura
+        RADDR => RADDR_cpu(5 downto 0),
+        RAVALID => RAVALID_cpu,
+    
+        RDATA => RDATA_cpu,
+        RRESP => RRESP_cpu,
+        RDATAV => RDATAV_cpu
+    );
+
+
+    WADDR_mux   <=  WADDR_cpu when Run_mode = '1' else
+                    WADDR_init;
+
+    WDATA_mux   <=  WDATA_cpu when Run_mode = '1' else
+                    WDATA_init;
+
+    WAVALID_mux <=  WAVALID_cpu when Run_mode = '1' else
+                    WAVALID_init;
+
+    WDATAV_mux  <=  WDATAV_cpu when Run_mode = '1' else
+                    WDATAV_init;
+
+    WRESP_cpu  <=  "00" when Run_mode = '0' else
+                    WRESP_mux;
+
+    WRESPV_cpu  <= '0' when Run_mode = '0' else
+                    WRESPV_mux;
+
+    WRESP_init  <=  "00" when Run_mode = '1' else
+                    WRESP_mux;
+
+    WRESPV_init  <= '0' when Run_mode = '1' else
+                    WRESPV_mux;
 
 end architecture;
-
--- rs = x // rt = y // rd = z // constat = C
-    --  
-    -- "00000000zzzzzz000000yyyyyyxxxxxx" -> ADD operation                RRR
-    -- "00010000zzzzzzxxxxxx0000CCCCCCCC" -> ADD inmediate operation      RRImm
-    -- "00100000zzzzzz000000yyyyyyxxxxxx" -> Substract operation          RRR
-    -- "00110000zzzzzz000000yyyyyyxxxxxx" -> Or operation                 RRR
-    -- "01000000zzzzzz000000yyyyyyxxxxxx" -> Xor operation                RRR
-    -- "01010000zzzzzz000000yyyyyyxxxxxx" -> And operation                RRR
-    -- "01100000zzzzzz000000yyyyyy000000" -> Not operation                RR
-    -- "01110000zzzzzz000000yyyyyy000000" -> Load operation               RR
-    -- "10000000zzzzzz000000yyyyyy000000" -> Store operation              RR
-    -- "10010000zzzzzz000000yyyyyyxxxxxx" -> Compare operation            RRR
-    -- "10100000zzzzzz000000yyyyyyxxxxxx" -> Shift left operation         RRR
-    -- "10110000zzzzzz000000yyyyyyxxxxxx" -> Shift right operation        RRR
-    -- "11000000zzzzzz000000000000000000" -> Jumpt/branch operation       R
-    -- "11010000zzzzzz000000yyyyyyxxxxxx" -> Jump/branch conditional operation  RRR
