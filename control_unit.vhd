@@ -65,7 +65,7 @@ end entity control_unit_block;
 
 architecture arch_control_unit of control_unit_block is
 
-  type estadoTipo is (s0, s1, s2, s3, s4, s5, s6, s7, s8, s9, s10, s11, s12, s13, s14, s15, s16, s17, s18, s19, s20, s21, s22, s23, s24, s25, s26, s27);
+  type estadoTipo is (s0, s1, s2, s3, s4, s5, s6, s7, s8, s9, s10, s11, s12, s13, s14, s15, s16, s17, s18, s19, s20, s21, s22, s23, s24, s25, s26, s27, s28);
   signal currentState : estadoTipo;
 
   signal PC : std_logic_vector(5 downto 0) := "000000";
@@ -174,9 +174,11 @@ begin
           currentState <= s10;
 
         when s10 =>
-          if (op_code = "1100" or (op_code = "1101" and out_alu = "0000000000000001")) then
+          if (op_code = "1100" or (op_code = "1101" and out_alu = "1111111111111111")) then
             currentState <= s14;
-          elsif (op_code = "1101" and out_alu = "0000000000000000") then
+            BankReg_address <= address_rd(3 downto 0);
+            BankReg_read_not_write <= '1';
+          elsif (op_code = "1101" and out_alu = "1010101010101010") then
             currentState <= s16;
           else
             currentState <= s11;
@@ -198,10 +200,10 @@ begin
           currentState <= s1;
 
         when s14 =>
-          BankReg_address <= address_rd(3 downto 0);
-          BankReg_read_not_write <= '1';
+          --BankReg_address <= address_rd(3 downto 0);
+          --BankReg_read_not_write <= '1';
 
-          currentState <= s15;
+          currentState <= s28;
 
         when s15 =>
           PC <= BankReg_output(5 downto 0);
@@ -291,6 +293,9 @@ begin
 
         when s27 => 
           currentState <= s9;
+        
+        when s28 =>
+          currentState <= s15;
 
         when others =>
           currentState <= s0;
