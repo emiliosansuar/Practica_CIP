@@ -264,7 +264,7 @@ begin
           currentState <= s1;
 
         when s24 =>
-          WADDR <= std_logic_vector(resize(signed(address_rd), WADDR'length));
+          WADDR <= std_logic_vector(resize(signed(BankReg_output), WADDR'length));
           WDATA <= std_logic_vector(resize(signed(Buffer_out), WDATA'length));
           WAVALID <= '1';
           WDATAV <= '1';
